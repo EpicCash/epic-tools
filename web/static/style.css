@@ -1,0 +1,10 @@
+body, html {
+    font-family: 'Roboto', sans-serif;
+    background: black;
+    color: #F5F5DC;
+}
+
+.footer {
+    position:fixed;
+    bottom:20px;
+}

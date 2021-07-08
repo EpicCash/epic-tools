@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-9 text-start mt-2">
+    <p>In order to fix '0 peers' problem:</p>
+    <p>- Make sure EPIC Server is turned off</p>
+    <p>- Upload <code>epic-server.toml</code> file <br />
+        (Default path: <code>C:\Users\USERNAME\.epic\main</code>)
+    </p>
+</div>
+<div class="text-center">
+    <button onclick="getFile()" class="btn btn-primary mt-3" id="upload_file">
+        Search for epic-server.toml file
+    </button>
+</div>
+
+{% endblock %}
