@@ -1,13 +1,23 @@
 body, html {
     font-family: 'Roboto', sans-serif;
-    background: black;
-    color: #F5F5DC;
+    background-image: url('/static/bg1.png');
+    background-color: #101114;
+    background-repeat: no-repeat;
+    color: #FAFFF7;
+}
+
+button, .btn {
+  font-family: Tahoma;
+    font-size: 1.2em;
 }
 
 a, a:hover {
     color: white
 }
 
+.top-cards {
+    background-color: rgba(16,17,20, 0.75)!important;
+}
 
 .footer {
     position:fixed;
@@ -19,6 +29,9 @@ a, a:hover {
 }
 
 .console {
+  font: 1.2rem Inconsolata, monospace;
+}
+.console.pre {
   font: 1.2rem Inconsolata, monospace;
 }
 

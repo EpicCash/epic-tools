@@ -1,6 +1,7 @@
+from setuptools._vendor import more_itertools
 from copy import deepcopy
-from tinydb import Query
 from fernet import Fernet
+from tinydb import Query
 from .db import db
 import subprocess
 import fileinput
@@ -8,6 +9,7 @@ import binascii
 import hashlib
 import psutil
 import sys
+import re
 import os
 
 
@@ -49,11 +51,10 @@ def verify_password(stored_password, provided_password):
 def save_pass(password):
     Password = Query().type == 'wallet_password'
     key = db.get(Query().type == 'key')['value']
-    print(key)
+    # print(key)
     key = Fernet(key.encode('utf-8'))
     db.upsert({'type': 'wallet_password',
                'value': key.encrypt(password).decode('utf-8')}, Password)
-    print(password)
 
 
 class ProcessPool:
@@ -136,5 +137,38 @@ def kill_process(process):
                 except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as er:
                     print(er)
                     pass
+
+
+def get_balance(password, cwd):
+    b = []
+    os.chdir(cwd)
+    try:
+        for line in subprocess.Popen(f'epic-wallet -p {password} info').read().split('\n'):
+            patter = r"\d+.\d+"
+            match = re.findall(patter, line)
+            if match:
+                print(match)
+                b.append(match)
+        b = [float(n) for n in list(more_itertools.collapse(b))]
+        balances = {
+            'total': b[1],
+            'wait_conf': float(b[2]),
+            'wait_final': float(b[3]),
+            'locked': float(b[4]),
+            'spendable': float(b[5])
+            }
+        os.chdir('..')
+        return balances
+
+    except:
+        balances = {
+            'total': 0,
+            'wait_conf': 0,
+            'wait_final': 0,
+            'locked': 0,
+            'spendable': 0
+            }
+        os.chdir('..')
+        return balances
 
 
