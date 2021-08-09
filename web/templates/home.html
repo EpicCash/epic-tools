@@ -2,240 +2,45 @@
 
 {% block content %}
 
-<div class="col-12 mb-4">
-    <div class="row">
-        <div class="col-4 text-center">
-            <div class="card bg-dark top-cards">
-                <div class="card-body">
-                    Blockchain height<br />
-                    <i class="fas fa-cubes"></i>
-                    <span class="" id="blockchainHeight">
-                        <div class="spinner-border spinner-border-sm" role="status"></div>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="col-8">
-            <div class="card bg-dark top-cards">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-3 text-end">
-                            <i class="fas fa-microchip"></i> CPU:<br>
-                            <i class="fas fa-gamepad"></i> GPU:
-                        </div>
-                        <div class="col-9 text-start">
-                            <span class="fs-6" id="cpu_info">
-                                <div class="spinner-border spinner-border-sm" role="status"></div>
-                            </span><br>
-                            <span class="fs-6" id="gpu_info">
-                                <div class="spinner-border spinner-border-sm" role="status"></div>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<hr />
-
-<div class="col-10 card bg-dark top-cards my-2 mb-4 py-3">
-    <div class="console text-center">
-        <code><span id="console"></span></code>
-    </div>
-</div>
-
-<div class="col-6 text-center hidden" id="create_wallet_screen">
-    <div class="form-group mb-3">
+<!-- CREATE WALLET, PROVIDE PASSWORD -->
+<div class="col-6 text-center hidden mt-3" id="create_wallet_screen">
+    <div class="form-group mb-2">
         <label for="password">Password</label>
-        <input type="password" class="form-control" id="password">
+        <input type="password" autocomplete="off" autofocus class="form-control" id="password">
     </div>
     <div class="form-group">
         <label for="password">Repeat password</label>
-        <input type="password" class="form-control" id="password2">
+        <input type="password" autocomplete="off" class="form-control" id="password2">
     </div>
     <button onclick="createWallet()" class="btn btn-success w-75 my-5" id="create_wallet_btn">
         <span class="fs-5">Create wallet</span>
     </button>
 </div>
 
+<!-- SUCCESS WALLET CREATION , 24 WORDS SEED PHRASE -->
 <div class="col-8 text-center hidden" id="wallet_created_screen">
-    <p id="creation_response" class="fs-4"></p>
-</div>
-
-<div class="col-11 text-start hidden mb-3" id="mining_screen">
-    <div class="card bg-dark top-cards">
-        <table class="table table-borderless align-middle px-5"
-            style="color: white;">
-            <tbody>
-                <!--        SERVER ROW-->
-                <tr>
-                    <td>
-                        <span id="serverIcon" class="indicator"></span>
-                        <span>Node </span>
-                    <td>
-                        <span id="serverName">epic.exe</span>
-                    </td>
-                    <td>
-                        <code><span id="serverStatus">Working</span></code>
-                    </td>
-                    <td>
-                        <span>
-                            <button class="btn btn-sm" name="Server"
-                                id="serverButton" onclick="startServer()">
-                            </button>
-                        </span>
-                    </td>
-                </tr>
-
-    <!--        WALLET LISTENER ROW -->
-                <tr>
-                    <td>
-                        <span id="listenerIcon" class="indicator"></span>
-                        <span>Listener</span>
-                    </td>
-                    <td>
-                        <span id="listenerName">epic-wallet.exe</span>
-                    </td>
-                    <td>
-                        <code><span id="listenerStatus">Listening</span></code>
-                    </td>
-                    <td>
-                        <span>
-                            <button class="btn btn-sm" name="Listener"
-                                id="listenerButton" onclick="startListener()">
-                            </button>
-                        </span>
-                    </td>
-                </tr>
-
-    <!--        CPU MINER ROW -->
-                <tr>
-                    <td>
-                        <span id="cpuIcon" class="indicator"></span>
-                        <span>Miner </span>
-                    </td>
-                    <td>
-                        <span id="cpuName">epic-miner-cpu.exe</span>
-                    </td>
-                    <td>
-                        <code><span id="cpuStatus">Stopped</span></code>
-                    </td>
-                    <td>
-                        <span>
-                            <button class="btn btn-sm" name="CPU"
-                                id="cpuButton" onclick="startCPU()">
-                            </button>
-                        </span>
-                    </td>
-                </tr>
-
-    <!--        GPU MINER ROW -->
-                <tr>
-                    <td>
-                        <span id="gpuIcon" class="indicator"></span>
-                        <span>Miner </span>
-                    </td>
-                    <td>
-                        <span id="gpuName">epic-miner-gpu.exe</span>
-                    </td>
-                    <td>
-                        <code><span id="gpuStatus">Stopped</span></code>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm" name="GPU"
-                            id="gpuButton" onclick="startGPU()">
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<button class="btn btn-success w-75 mt-2 mb-4 hidden" id="start_mining"
-    onclick="startAll()">Start Quick-Mining
-</button>
-
-<hr />
-
-<div class="row mt-2 hidden" id="other_buttons">
-    <div class="col-6 text-center my-3">
-        <a href="/static/help.pdf" target="_blank" class="btn btn btn-info w-100 mt-2" id="help">
-            <i class="fas fa-info"></i> Beginners Guide
-        </a>
-    </div>
-
-    <div class="col-6 text-center my-3">
-        <button type="button" class="btn btn btn-info w-100 mt-2" id="wallet_balance"
-             data-bs-toggle="modal" data-bs-target="#wallet_balance_modal" onclick="walletBalance()">
-            <i class="fas fa-wallet"></i> Wallet Balance
-        </button>
-    </div>
-    <div class="col-4 text-center">
-        <button type="button" class="btn btn-sm btn-warning w-100 mt-2" id="backup_db"
-            onclick="backupDB()">
-            <i class="fas fa-server"></i> Backup database
-        </button>
-    </div>
-
-    <div class="col-4 text-center">
-        <button type="button" class="btn btn-sm btn-warning w-100 mt-2" id="fix_db"
-             data-bs-toggle="modal" data-bs-target="#fix_db_modal">
-                <i class="fas fa-tools"></i> Repair database
-        </button>
-    </div>
-
-    <div class="col-4 text-center">
-        <button type="button" class="btn btn-sm btn-warning w-100 mt-2"
-                data-bs-toggle="modal" data-bs-target="#fix_peers">
-                <i class="far fa-trash-alt"></i> Clear peers
-        </button>
-    </div>
-</div>
-
-
-<!-- Modal WALLET-->
-<div class="modal fade" id="wallet_balance_modal" data-bs-backdrop="static" data-bs-keyboard="false"
-     tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel2">Wallet balance as of <i class="fas fa-cubes"></i> height:
-                    <span id="wallet_height">(Connecting...)</span> </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="card card-stats">
+        <div class="card-header card-header-rose card-header-icon">
+            <div class="card-icon">
+                <i class="material-icons">vpn_key</i>
             </div>
+            <h3 class="card-title">24-word seed phrase</h3>
+            <p id="creation_response" class="pt-5 mb-2 fs-5 text-dark text-center"></p>
+            <hr />
+            <h4 class="card-title text-center my-2">
+                <span class="material-icons text-warning">warning</span>
+                SAVE THIS NOW
+            </h4>
 
-            <div class="modal-body py-4">
-                <div class="" id="wallet_response"></div>
-                <div class="hidden" id="balances_response">
-                    <div class="row">
-                        <div class="col-6">Total:</div>
-                        <div class="col-6" id="total"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">Waiting confirmation:</div>
-                        <div class="col-6" id="wait_conf"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">Locked:</div>
-                        <div class="col-6" id="locked"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">Spendable:</div>
-                        <div class="col-6" id="spendable"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-
-                <button type="button" class="btn btn-success">Withdraw Epic-Cash
-                </button>
-                <button type="button" class="btn btn-secondary"
-                    data-bs-dismiss="modal">Close
-                </button>
+            <button class="btn btn-success w-100 my-1" onclick="startAll()">
+                START EPIC SERVER
+            </button>
+        </div>
+        <div class="card-footer">
+            <div class="stats">
+                <i class="material-icons">info</i>
+                This is human readable version of your private key,
+                it is shown to you only once!
             </div>
         </div>
     </div>
@@ -245,7 +50,7 @@
 <div class="modal fade" id="fix_db_modal" data-bs-backdrop="static" data-bs-keyboard="false"
      tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content  bg-dark">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">Restoring chain data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -257,8 +62,8 @@
                 and restore from pre-installed blockchain file.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="restoreChainData()"
-                    data-bs-dismiss="modal">Understood</button>
+                <button type="button" class="btn btn-success" onclick="restoreChainData()"
+                    data-bs-dismiss="modal">Confirm</button>
             </div>
         </div>
     </div>
@@ -268,7 +73,7 @@
 <div class="modal fade" id="fix_peers" data-bs-backdrop="static" data-bs-keyboard="false"
      tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content  bg-dark">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Clearing peers data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -278,8 +83,8 @@
                 Server will be stopped and <code>chain_data/peer </code> directory cleared.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="removePeers()"
-                    data-bs-dismiss="modal">Understood</button>
+                <button type="button" class="btn btn-success" onclick="removePeers()"
+                    data-bs-dismiss="modal">Confirm</button>
             </div>
         </div>
     </div>

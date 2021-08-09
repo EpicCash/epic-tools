@@ -2,16 +2,19 @@ var password = ''
 var sleepTime = 1500
 var spinner = '<div class="spinner-border spinner-border-sm" role="status"></div>'
 
-
 // Check if wallet is already created or it is first time
 isWallet()
-
 // Check for user hardware details
 hardwareInfo()
 
 // Get blockchain height from explorer.epic.tech API
 blockchainHeight()
 
+async function greet() {
+    var greetings = await eel.greetings()()
+    console.log(greetings)
+    send_console(greetings)
+}
 
 function callback(current_time){
     document.getElementById("output").innerText=current_time
@@ -38,7 +41,7 @@ async function removePeers() {
     send_console('Clearing peers... ' + spinner)
     var peers = await eel.remove_peers()()
     if (peers) {
-        await sleep(5000)
+        await sleep(3000)
         send_console('Clearing peers completed!', remove=1)
     }
 }
@@ -54,21 +57,18 @@ async function restoreChainData() {
 
 async function isWallet() {
     var created = await eel.is_wallet()()
-    var create_wallet_screen = $('#create_wallet_screen')
-    var btn_mine = $('#start_mining')
 
     if (!created) {
-        create_wallet_screen.toggleClass('hidden')
         send_console('To start mining please create wallet')
-        $('#start_mining').addClass('hidden')
+        $('.software_tabs').addClass('hidden')
+        $('.software_content').addClass('hidden')
+        $('#create_wallet_screen').toggleClass('hidden')
         $('#mining_screen').addClass('hidden')
         $('#create_wallet_screen').removeClass('hidden')
         $('#wallet_created_screen').addClass('hidden')
     } else {
-        $('#other_buttons').removeClass('hidden')
-        send_console('')
-        btn_mine.removeClass('hidden')
-//        startAll()
+        $('.top-body').removeClass('hidden')
+        greet()
     }
 }
 
@@ -91,18 +91,18 @@ async function createWallet() {
         if (response) {
             send_console('Please backup in non-digital form your seed phrase:')
             creation_response.html(response)
-            btn_mine.removeClass('hidden')
+            $('.software_tabs').removeClass('hidden')
+            $('.software_content').removeClass('hidden')
         } else {
             send_console('Wallet already exists', remove=1)
             wallet_created_screen.addClass('hidden')
-            btn_mine.removeClass('hidden')
+            $('.software_tabs').removeClass('hidden')
+            $('.software_content').removeClass('hidden')
         }
     }
 }
 
-
 function cleanBalances() {
-    $('#balances_response').addClass('hidden')
     var val = ''
     $('#total').html(val)
     $('#wait_conf').html(val)
@@ -110,26 +110,23 @@ function cleanBalances() {
     $('#spendable').html(val)
     $('#wallet_response').html(val)
 }
-
 async function walletBalance() {
+    $('#wallet_refresh_btn').addClass('fa-spin')
     cleanBalances()
-    $('#wallet_response').html(spinner)
     if (await eel.is_running('epic.exe')()) {
         var balance = await eel.wallet_balance()()
         if (balance) {
             $('#wallet_height').html(balance.height)
-            $('#balances_response').removeClass('hidden')
             $('#total').html(balance.total)
             $('#wait_conf').html(balance.wait_conf)
             $('#locked').html(balance.locked)
             $('#spendable').html(balance.spendable)
-            $('#wallet_response').html('')
         }
     } else {
-        $('#wallet_response').html('')
-        $('#wallet_response').html('To check wallet balance please start Server (epic.exe) first.')
-        send_console('To check wallet balance please start Server (epic.exe) first.', remove=1)
+        $('#wallet_height').html('Please run epic.exe server first')
     }
+    $('#wallet_refresh_btn').removeClass('fa-spin')
+
 }
 
 function changeBtn(btn, toggle) {
@@ -164,8 +161,8 @@ function changeStatus(status, text) {
 
 async function send_console(msg, remove=0) {
     $('#console').html(msg)
-    await sleep(5000)
     if (remove) {
+        await sleep(5000)
         $('#console').html('')
     }
 }
@@ -180,8 +177,9 @@ function changeBtnFunc(btn, toggle) {
 
 // Function to START epic.exe server
 async function startServer() {
-    $('#start_mining').addClass('hidden')
+    $('#wallet_created_screen').addClass('hidden')
     $('#mining_screen').removeClass('hidden')
+    await startListener()
     await eel.start_server()
     changeBtnFunc($('#serverButton'), 'stop')
     changeBtn($('#serverButton'), 'stop')
@@ -189,17 +187,20 @@ async function startServer() {
     changeStatus($('#serverStatus'), 'Working..')
     changeBtn($('#serverButton'), 'stop')
     rollbackCheck()
+    await sleep(3000)
+    await nodeData()
+    await walletBalance()
 }
 
 // Function to STOP epic.exe server
 async function stopServer() {
     eel.close_process('epic.exe')
+    await sleep(1000)
     changeBtnFunc($('#serverButton'), 'start')
     changeBtn($('#serverButton'), 'start')
     changeIcon($('#serverIcon'), 'error')
     changeStatus($('#serverStatus'), 'Stopped')
     send_console('')
-
 }
 
 // Function to START epic-miner-cpu.exe
@@ -245,6 +246,7 @@ async function startListener() {
     changeBtn($('#listenerButton'), 'stop')
     changeIcon($('#listenerIcon'), 'online')
     changeStatus($('#listenerStatus'), 'Listening..')
+    $('#listenerPort').html('3415')
 }
 
 // Function to STOP epic-wallet.exe
@@ -280,10 +282,39 @@ async function rollbackCheck() {
 
 }
 
+async function nodeData() {
+    var data = await eel.node_data()()
+    if (data) {
+        $('#serverPeers').html(data.connections)
+    }
+}
+
+eel.expose(stopMining)
+async function stopMining() {
+    var btn = $('#start_mining')
+    var btn_spinner = $('#start_mining_spinner')
+    var btn_icon = $('#start_mining_icon')
+    send_console('Mining software is stopped', remove=1)
+
+    btn_spinner.removeClass('hidden')
+    await stopCPU()
+    await stopGPU()
+    await sleep(3000)
+    btn.addClass('btn-success')
+    btn.removeClass('btn-warning')
+    btn_spinner.addClass('hidden')
+    btn_icon.html('<span class="material-icons">play_circle_filled</span>')
+    btn.attr("onClick", "startAll()")
+}
+
 async function startAll() {
     send_console('')
+    $('.top-body').removeClass('hidden')
     $('#wallet_created_screen').addClass('hidden')
-    $('#start_mining').html('Start Quick-Mining ' + spinner)
+    var btn = $('#start_mining')
+    var btn_spinner = $('#start_mining_spinner')
+    var btn_icon = $('#start_mining_icon')
+    btn_spinner.removeClass('hidden')
 
     // Check if there si existing db_backup
     var firstBackup = await eel.first_backup()()
@@ -300,7 +331,11 @@ async function startAll() {
             await startCPU()
         }
         await startServer()
-        $('#other_buttons').removeClass('hidden')
+        btn_spinner.addClass('hidden')
+        btn.removeClass('btn-success')
+        btn.addClass('btn-warning')
+        btn_icon.html('<span class="material-icons">pause_circle</span>')
+        btn.attr("onClick", "stopMining()")
         poolUpdater(5000)
 
     } else {
@@ -311,8 +346,8 @@ async function startAll() {
 async function hardwareInfo() {
     var cpu = await eel.get_cpu()()
     var gpu = await eel.get_gpu()()
-    $('#cpu_info').html("<a href='" + cpu.link + "' target='_blank'>" + cpu.string + "</a>")
-    $('#gpu_info').html("<a href='" + gpu.link + "' target='_blank'>" + gpu.string + "</a>")
+    $('#cpu_info').html("<a class='a-link' href='" + cpu.link + "' target='_blank'>" + cpu.string + "</a>")
+    $('#gpu_info').html("<a class='a-link' href='" + gpu.link + "' target='_blank'>" + gpu.string + "</a>")
 }
 
 function sleep(ms) {

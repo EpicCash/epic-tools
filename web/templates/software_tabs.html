@@ -1,0 +1,58 @@
+<div class="col-7 py-2">
+    <ul class="nav nav-pills nav-pills-primary justify-content-start mt-1" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link  active show" data-toggle="tab" href="#link1" role="tablist">
+                <span id="serverIcon" class="indicator"></span>
+                <span id="serverName"> Server</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#link2" role="tablist">
+                <span id="listenerIcon" class="indicator"></span>
+                <span id="listenerName"> Listener</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#link3" role="tablist">
+                <span id="cpuIcon" class="indicator"></span>
+                <span id="cpuName"> CPU Miner</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#link34" role="tablist">
+                <span id="gpuIcon" class="indicator"></span>
+                <span id="gpuName"> GPU Miner</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="col-5 py-2 text-center">
+    <button class="dropdown-toggle btn btn-primary btn-round" type="button" id="dropdownMenuButton"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Options
+        <div class="ripple-container"></div>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start"
+         style="position: absolute; top: 41px; left: 1px; will-change: top, left;">
+        <h6 class="dropdown-header">Server tools</h6>
+        <a class="dropdown-item" href="#" id="backup_db" onclick="backupDB()">Backup Database</a>
+        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#fix_db_modal">Fix Corrupted Database</a>
+        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#fix_peers">Clear Peers</a>
+        <a class="dropdown-item" href="/static/help.pdf" target="_blank">Beginners Guide</a>
+
+
+    </div>
+    <button class="btn btn-success" id="start_mining"
+            onclick="startAll()">
+        <span id="start_mining_icon">
+            <span class="material-icons">play_circle_filled</span>
+        </span>
+        <span id="start_mining_text">
+            Quick Mining
+        </span>
+        <span id="start_mining_spinner" class="hidden">
+            <div class="spinner-border spinner-border-sm" role="status"></div>
+        </span>
+    </button>
+</div>

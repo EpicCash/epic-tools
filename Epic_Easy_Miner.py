@@ -30,6 +30,15 @@ pool = ProcessPool()
 
 
 @eel.expose
+def greetings():
+    now = datetime.datetime.now()
+    name = os.getlogin()
+    msg = f"Hey {name}, have a nice day!"
+    print(msg)
+    return msg
+
+
+@eel.expose
 def pool_updater():
     names = {
         'epic.exe': 'stopServer',
@@ -51,7 +60,12 @@ def pool_updater():
         if not v['running']:
             response.append(names[k])
             # print(response)
-    print(pool.read_db())
+
+    if ('epic-miner-gpu.exe' and 'epic-miner-cpu.exe') not in data.keys():
+        print('no miner is running')
+        eel.stopMining()
+
+    print(data)
     return response
 
 
@@ -263,6 +277,20 @@ def start_cpu_miner():
 
 
 @eel.expose
+def node_data():
+    if is_running('epic.exe'):
+        try:
+            url = f"http://127.0.0.1:3413/v1/status"
+            print(json.loads(requests.get(url).content))
+            return json.loads(requests.get(url).content)
+        except Exception as e:
+            print(e)
+            return False
+    else:
+        return False
+
+
+@eel.expose
 def wallet_balance():
     b = []
     cwd = os.path.join(os.getcwd(), "epic-wallet")
@@ -283,6 +311,11 @@ def wallet_balance():
                 print(match)
                 b.append(match)
         b = [n for n in list(more_itertools.collapse(b))]
+        if 'failed' in info:
+            print('wallet balance failed')
+            b = b[4:]
+            print(b)
+
         balances = {
             'total': float(b[-5]),
             'wait_conf': float(b[-4]),
@@ -407,5 +440,4 @@ if __name__ == "__main__":
     multiprocessing.freeze_support()
     eel.start('templates/home.html',
               jinja_templates='templates',
-              size=(900, 900),
-              port=5001)
+              size=(1000, 945), port=5001)

@@ -1,31 +1,53 @@
 body, html {
-    font-family: 'Roboto', sans-serif;
-    background-image: url('/static/bg1.png');
-    background-color: #101114;
+    font-family: 'Roboto', sans-serif!important;
     background-repeat: no-repeat;
     color: #FAFFF7;
 }
 
-button, .btn {
-  font-family: Tahoma;
-    font-size: 1.2em;
+.app_head {
+    background-image: url('/static/bg2.png');
+    color: #FAFFF7;
+    box-shadow: 0px 2px 3px black;
 }
 
-a, a:hover {
-    color: white
+.software_tabs {
+    color: #FAFFF7;
+    text-align: center;
+    margin-bottom: 45px;
+    box-shadow: 0px 1px 4px #333333;
+    background-color: rgba(0,0,0,0.05)
+}
+
+button, .btn {
+  font-family: Tahoma;
+    font-size: 0.9rem!important;
+}
+
+.a-link, a-link:hover {
+    color: white!important;
 }
 
 .top-cards {
     background-color: rgba(16,17,20, 0.75)!important;
+    font-color: #EAEFE7;
+}
+
+.soft-cards {
+    min-height: 190px;
 }
 
 .footer {
-    position:fixed;
-    bottom:20px;
+    background-image: url('/static/bg2.png');
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0px 2px 12px black;
 }
 
 .hidden {
-    display: none;
+    display: none!important;
 }
 
 .console {
