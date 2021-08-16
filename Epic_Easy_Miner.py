@@ -1,8 +1,9 @@
-from setuptools._vendor import more_itertools
-from fernet import Fernet
+# MESSY_CODE = TRUE
+
+from tkinter.filedialog import askdirectory
 from copy import deepcopy
-from tinydb import Query
 from pathlib import Path
+from tkinter import Tk
 from time import sleep
 import multiprocessing
 import subprocess
@@ -16,25 +17,64 @@ import atexit
 import json
 import eel
 import os
-import re
 
-from src.db import db
-from src.tools import edit_server_toml
+from src.tools import edit_server_toml, get_directory_size, open_port
 from src.tools import save_pass, check_process, ProcessPool
 
+from src.wallet import Wallet
 
-logging.basicConfig(filename='app.log', encoding='utf-8', level=logging.INFO,
-                    format='%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+si = subprocess.STARTUPINFO()
+si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+logging.basicConfig(filename='app.log', format='%(asctime)s %(levelname)s %(message)s',
+                    datefmt='%m/%d/%Y %I:%M:%S %p', encoding='utf-8', level=logging.INFO)
 eel.init('web')
 pool = ProcessPool()
+wallet = Wallet(
+    file_name='epic-wallet.exe', pool=pool,
+    cwd=os.path.join(os.getcwd(), "epic-wallet")
+    )
+
+
+@eel.expose
+def is_wallet():
+    """ Checking in database if wallet was already created """
+    return wallet.created()
+
+
+@eel.expose
+def create_wallet(password):
+    return wallet.create(password)
+
+
+@eel.expose
+def start_listener():
+    return wallet.run_listener()
+
+
+@eel.expose
+def wallet_balance():
+    return wallet.balance()
+
+
+@eel.expose
+def withdraw_from_wallet(address):
+    return wallet.send(address)
+
+
+@eel.expose
+def wallet_data():
+    data = {
+        'ext_ip': wallet.ext_ip(),
+        'port': wallet.cfg['listener_port'],
+        'open_port': open_port(wallet.cfg['listener_port'])
+        }
+    return data
 
 
 @eel.expose
 def greetings():
-    now = datetime.datetime.now()
     name = os.getlogin()
     msg = f"Hey {name}, have a nice day!"
-    print(msg)
     return msg
 
 
@@ -59,20 +99,20 @@ def pool_updater():
     for k, v in data.items():
         if not v['running']:
             response.append(names[k])
-            # print(response)
+    #             # print(response)
 
     if ('epic-miner-gpu.exe' and 'epic-miner-cpu.exe') not in data.keys():
-        print('no miner is running')
+        # print('no miner is running')
         eel.stopMining()
 
-    print(data)
+    # print(data)
     return response
 
 
 @eel.expose
 def close_process(process):
     pool.kill(proc=process)
-    print(f"{process} terminated.")
+    # print(f"{process} terminated.")
     return True
 
 
@@ -82,8 +122,8 @@ def exit_handler():
     list = deepcopy(pool.list)
     for p in list:
         pool.kill(p)
-        print(f'KILLING {p}')
-        logging.info(f"KILLING {p}")
+        # print(f'KILLING {p}')
+        # logging.info(f"KILLING {p}")
 
 
 atexit.register(exit_handler)
@@ -101,7 +141,7 @@ def get_cpu():
         'string': cpu_string,
         'link': f"https://www.google.com/search?q={cpu_string}+randomx"
         }
-    logging.info(cpu_string)
+    # logging.info(cpu_string)
     return data
 
 
@@ -117,7 +157,7 @@ def get_gpu():
         'string': gpu_string,
         'link': f"https://www.google.com/search?q={gpu_string}+progpow"
         }
-    logging.info(gpu_string)
+    # logging.info(gpu_string)
     return data
 
 
@@ -126,14 +166,6 @@ def get_height():
     """Get blockchain height from explorer.epic.tech API"""
     url = "https://explorer.epic.tech/api?q=getblockcount"
     return json.loads(requests.get(url).content)
-
-
-@eel.expose
-def is_wallet():
-    """ Checking in database if wallet was already created """
-    Created = Query().type == 'wallet_created'
-    print(db.get(Created)['value'])
-    return db.get(Created)['value']
 
 
 @eel.expose
@@ -147,8 +179,8 @@ def rollback_check():
     if my_file.exists():
         return False
     else:
-        print('no rollback file')
-        logging.warning('no rollback file')
+        # print('no rollback file')
+        # logging.warning('no rollback file')
         return True
 
 
@@ -168,7 +200,7 @@ def backup_db():
     name = f"{now.day}_{now.month}_{dir}_backup"
     old_backup = False
     old_backup_name = False
-    print(f'new backup name: {name}')
+    # print(f'new backup name: {name}')
 
     if check_process(file):
         pool.kill(check_process(file))
@@ -181,35 +213,85 @@ def backup_db():
                 os.rename(os.path.join(cwd, d),
                           os.path.join(cwd, f'{d}_to_remove'))
                 old_backup = f'{d}_to_remove'
-                print(old_backup)
+                # print(old_backup)
     except Exception as e:
-        print(e)
+        pass
+        # print(e)
 
     try:
         if os.path.isdir(os.path.join(cwd, dir)):
             shutil.copytree(os.path.join(cwd, dir),
                             os.path.join(cwd, name),
                             dirs_exist_ok=True)
-            logging.info('chain_data backup done successfully')
+            # logging.info('chain_data backup done successfully')
 
             if old_backup:
                 shutil.rmtree(os.path.join(cwd, old_backup))
-                print(f'Removed old backup {old_backup}')
+                # print(f'Removed old backup {old_backup}')
 
     except Exception as e:
         if old_backup:
             os.rename(os.path.join(cwd, old_backup),
                       os.path.join(cwd, old_backup_name))
-        print(e)
-        logging.warning(e)
+        # print(e)
+        # logging.warning(e)
 
     return True
+
+
+@eel.expose
+def upload_chain_data(input=None):
+    root = Tk()
+    cwd = os.path.join(os.getcwd(), "epic-server")
+    destination = os.path.join(cwd, 'chain_data')
+    to_copy = ['header', 'lmdb', 'txhashset']
+
+    if not input:
+        # Tkinter pick directory dialog
+        root.wm_attributes('-topmost', 1)
+        root.overrideredirect(1)
+        root.withdraw()
+        chain_data = askdirectory()
+    else:
+        chain_data = input
+
+    try:
+        dirs = [[f.name, f.path] for f in os.scandir(chain_data)
+                if f.is_dir() and f.name in to_copy]
+
+        if len(dirs) < 3:
+            # print(dirs)
+            return False
+
+        # close epic server before changes in chain_data
+        file = 'epic.exe'
+        if check_process(file):
+            pool.kill(check_process(file))
+            sleep(3)
+
+        for dir in dirs:
+            shutil.copytree(dir[1], os.path.join(destination, dir[0]),
+                            dirs_exist_ok=True)
+            msg = f'{dir[0]} moved to destination'
+            print(msg)
+            logging.info(msg)
+
+        return True
+    except Exception as e:
+        print(e)
 
 
 @eel.expose
 def restore_chain_data():
     cwd = os.path.join(os.getcwd(), "epic-server")
 
+    # close epic server before changes in chain_data
+    file = 'epic.exe'
+    if check_process(file):
+        pool.kill(check_process(file))
+        sleep(3)
+
+    # backup current chain_data to old_chain_data, remove if old one existed
     for dir in os.listdir(cwd):
         if os.path.isdir(os.path.join(cwd, dir)):
             if dir == 'chain_data':
@@ -217,33 +299,54 @@ def restore_chain_data():
                     os.rename(os.path.join(cwd, dir),
                               os.path.join(cwd, f'old_{dir}'))
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     shutil.rmtree(os.path.join(cwd, f'old_{dir}'))
                     os.rename(os.path.join(cwd, dir),
                               os.path.join(cwd, f'old_{dir}'))
-                print(dir)
+                # print(f'{dir} copied to old_{dir}')
 
-    for dir in os.listdir(cwd):
-        if dir.endswith('_backup'):
-            shutil.copytree(os.path.join(cwd, dir),
-                            os.path.join(cwd, 'chain_data'),
-                            dirs_exist_ok=True)
+    # restore chain_data from existing backup directory or false
+    for dir in os.scandir(cwd):
+        if dir.name.endswith('_backup'):
+            return upload_chain_data(input=dir.path)
+
+    return False
+
+
+@eel.expose
+def blockchain_size(str=False):
+    cwd = os.path.join(os.getcwd(), "epic-server")
+    size, suffix = get_directory_size(os.path.join(cwd, 'chain_data'))
+    # print(f"{size}{suffix}")
+    if str:
+        return f"{size}{suffix}"
+    return size, suffix
+
+
+@eel.expose
+def chain_data_exists():
+    cwd = os.path.join(os.getcwd(), "epic-server")
+    for dir in os.scandir(cwd):
+        if dir.name == 'chain_data':
+            return True
+    return False
+
+
+@eel.expose
+def chain_data_outdated():
+    if blockchain_size()[1] not in ['B', 'KB', 'MB']:
+        return False
     return True
 
 
 @eel.expose
 def first_backup():
     cwd = os.path.join(os.getcwd(), "epic-server")
-    first_backup = False
-
     for dir in os.listdir(cwd):
         if dir.endswith('_backup'):
-            first_backup = True
-
-    if not first_backup:
-        print('doing 1st backup')
-
-    return first_backup
+            return True
+    print('false')
+    return False
 
 
 @eel.expose
@@ -255,10 +358,10 @@ def remove_peers():
     try:
         cwd = os.path.join(os.getcwd(), "epic-server/chain_data")
         shutil.rmtree(os.path.join(cwd, 'peer'))
-        print('peers deleted')
+        # print('peers deleted')
         return True
     except Exception as e:
-        print(e)
+        # print(e)
         return False
 
 
@@ -281,97 +384,20 @@ def node_data():
     if is_running('epic.exe'):
         try:
             url = f"http://127.0.0.1:3413/v1/status"
-            print(json.loads(requests.get(url).content))
+            # print(json.loads(requests.get(url).content))
             return json.loads(requests.get(url).content)
         except Exception as e:
-            print(e)
+            # print(e)
             return False
     else:
         return False
-
-
-@eel.expose
-def wallet_balance():
-    b = []
-    cwd = os.path.join(os.getcwd(), "epic-wallet")
-    Password = Query().type == 'wallet_password'
-    key = db.get(Query().type == 'key')['value']
-    key = Fernet(key.encode('utf-8'))
-    password = db.get(Password)['value'].encode('utf-8')
-    password = key.decrypt(password).decode('utf-8')
-    os.chdir(cwd)
-
-    try:
-        info = os.popen(f'epic-wallet -p {password} info').read()
-        print(info)
-        for line in info.split('\n'):
-            patter = r"\d+.\d+"
-            match = re.findall(patter, line)
-            if match:
-                print(match)
-                b.append(match)
-        b = [n for n in list(more_itertools.collapse(b))]
-        if 'failed' in info:
-            print('wallet balance failed')
-            b = b[4:]
-            print(b)
-
-        balances = {
-            'total': float(b[-5]),
-            'wait_conf': float(b[-4]),
-            'wait_final': float(b[-3]),
-            'locked': float(b[-2]),
-            'spendable': float(b[-1]),
-            'height': b[0]
-            }
-        os.chdir('..')
-        print(balances)
-        return balances
-
-    except Exception as e:
-        print(e)
-        os.chdir('..')
-        return False
-
-
-@eel.expose
-def start_listener():
-    cwd = os.path.join(os.getcwd(), "epic-wallet")
-    os.chdir(cwd)
-    file = 'epic-wallet.exe'
-    Created = Query().type == 'wallet_created'
-    Password = Query().type == 'wallet_password'
-    key = db.get(Query().type == 'key')['value']
-    key = Fernet(key.encode('utf-8'))
-    password = db.get(Password)['value'].encode('utf-8')
-    password = key.decrypt(password).decode('utf-8')
-    running = check_process(file)
-
-    if running:
-        process = running
-    else:
-        process = subprocess.Popen([file, "-p", f"{password}", "listen"],
-                                   stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-        stdout = str(process.stdout)
-        logging.info(process.stdout)
-
-        if "Wallet seed file doesn't exist" in stdout:
-            db.update({'value': False}, Created)
-            logging.warning(stdout)
-            os.chdir('..')
-            return False
-
-    logging.info('Listener running')
-    os.chdir('..')
-    pool.add(file, process.pid)
-    # print(pool.list)
-    return True
 
 
 @eel.expose
 def start_server():
     cwd = os.path.join(os.getcwd(), "epic-server")
     file = 'epic.exe'
+    # print(fr'{cwd}')
     os.chdir(cwd)
 
     # If server starts for the first time create config file
@@ -379,65 +405,35 @@ def start_server():
         # Run server for the first time with extra args
         process = subprocess.run([file, "server", "config"],
                                  stderr=subprocess.STDOUT,
-                                 stdout=subprocess.PIPE)
-        logging.info(process.stdout)
+                                 stdout=subprocess.PIPE,
+                                 startupinfo=si)
+        # logging.info(process.stdout)
 
         # Make changes in config file to prevent synchronization bug
         edit_server_toml('epic-server.toml')
-        logging.info(f"epic-server.toml edited successfully")
+        # logging.info(f"epic-server.toml edited successfully")
 
     # Start epic.exe process
     process = pool.get_or_run(file, cwd)
-    try:
-        logging.info(process.communicate())
-    except:
-        pass
     os.chdir('..')
     return True
 
 
-@eel.expose
-def create_wallet(password):
-    # Save encrypted password to database
-    save_pass(password)
-    Created = Query().type == 'wallet_created'
-    cwd = os.path.join(os.getcwd(), "epic-wallet")
-    file = os.path.join(cwd, 'epic-wallet.exe')
-
-    # Run epic-wallet init command and create config file
-    process = subprocess.run([file, "-p", f"{password}", "init", "-h"], cwd=cwd,
-                             stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-    stdout = str(process.stdout)
-
-    if 'successfully' in stdout:
-        # Show to user 12/24 word seed phrase
-        lines = str(process.stdout).split('\\n')
-        db.update({'value': True}, Created)
-        return f"{lines[5]}"
-
-    elif 'already exists' in stdout:
-        db.update({'value': True}, Created)
-        logging.info(stdout)
-
-    else:
-        logging.warning(stdout)
-        return False
-
-
-# @eel.expose
-# def upload_file():
-#     root = Tk()
-#     root.withdraw()
-#     root.wm_attributes('-topmost', 1)
-#     file = askopenfilename(filetypes=[('TOML Files', '*toml')])
-#     if 'epic-server' in file:
-#         return file
-#     else:
-#         return False
-
-
 if __name__ == "__main__":
+    root = Tk()
+    screen_height = root.winfo_screenheight()
+    root.overrideredirect(1)
+    root.destroy()
+
+    if screen_height < 950:
+        height = int(screen_height) - 50
+    else:
+        height = 900
+
     multiprocessing.freeze_support()
-    eel.start('templates/home.html',
-              jinja_templates='templates',
-              size=(1000, 945), port=5001)
+    try:
+        eel.start('templates/home.html',
+                  jinja_templates='templates',
+                  size=(1000, height), port=3333)
+    except Exception as e:
+        pass

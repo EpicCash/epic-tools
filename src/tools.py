@@ -1,15 +1,15 @@
-from setuptools._vendor import more_itertools
 from copy import deepcopy
 from fernet import Fernet
 from tinydb import Query
+from pathlib import Path
 from .db import db
 import subprocess
 import fileinput
 import binascii
 import hashlib
 import psutil
+import socket
 import sys
-import re
 import os
 
 
@@ -51,10 +51,21 @@ def verify_password(stored_password, provided_password):
 def save_pass(password):
     Password = Query().type == 'wallet_password'
     key = db.get(Query().type == 'key')['value']
-    # print(key)
+#     # print(key)
     key = Fernet(key.encode('utf-8'))
     db.upsert({'type': 'wallet_password',
                'value': key.encrypt(password).decode('utf-8')}, Password)
+
+
+def open_port(port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex(('127.0.0.1', port))
+    if result == 0:
+        sock.close()
+        return True
+    else:
+        sock.close()
+        return False
 
 
 class ProcessPool:
@@ -63,16 +74,15 @@ class ProcessPool:
 
     def get_or_run(self, process_name, cwd):
         running = check_process(process_name)
-        print(process_name)
+        # print(process_name)
         if running:
             process = running
-            print(f'PROCESS FOUND: {process}')
+            # print(f'PROCESS FOUND: {process}')
         else:
-            process = subprocess.Popen(f'start {os.path.join(cwd, process_name)}',
-                                       shell=True)
+            process = subprocess.Popen(f'start {process_name}', cwd=cwd, shell=True)
 
         self.add(process_name, process.pid, running=True)
-        print(self.list)
+        # print(self.list)
         return process
 
     @staticmethod
@@ -106,7 +116,7 @@ class ProcessPool:
 
 
 def check_process(name):
-    # print(name)
+#     # print(name)
     # Iterate over the all the running process
     for process in psutil.process_iter():
         try:
@@ -122,10 +132,10 @@ def kill_process(process):
     if isinstance(process, psutil.Process):
         try:
             process.kill()
-            return print(f"(PID:{process.ppid()}) {process.name()} is closed")
+            # return print(f"(PID:{process.ppid()}) {process.name()} is closed")
 
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as er:
-            print(er)
+            # print(er)
             pass
     else:
         for proc in psutil.process_iter():
@@ -133,42 +143,23 @@ def kill_process(process):
                 or (proc.pid == process):
                 try:
                     proc.kill()
-                    return print(f"(PID:{proc.ppid()}) {proc.name()} is closed")
+                    # return print(f"(PID:{proc.ppid()}) {proc.name()} is closed")
                 except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as er:
-                    print(er)
+                    # print(er)
                     pass
 
 
-def get_balance(password, cwd):
-    b = []
-    os.chdir(cwd)
-    try:
-        for line in subprocess.Popen(f'epic-wallet -p {password} info').read().split('\n'):
-            patter = r"\d+.\d+"
-            match = re.findall(patter, line)
-            if match:
-                print(match)
-                b.append(match)
-        b = [float(n) for n in list(more_itertools.collapse(b))]
-        balances = {
-            'total': b[1],
-            'wait_conf': float(b[2]),
-            'wait_final': float(b[3]),
-            'locked': float(b[4]),
-            'spendable': float(b[5])
-            }
-        os.chdir('..')
-        return balances
+def get_directory_size(directory):
+    root_directory = Path(directory)
+    size = sum(f.stat().st_size for f in root_directory.glob('**/*') if f.is_file())
 
-    except:
-        balances = {
-            'total': 0,
-            'wait_conf': 0,
-            'wait_final': 0,
-            'locked': 0,
-            'spendable': 0
-            }
-        os.chdir('..')
-        return balances
+    def humansize(nbytes):
+        suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+        i = 0
+        while nbytes >= 1024 and i < len(suffixes) - 1:
+            nbytes /= 1024.
+            i += 1
+        f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
+        return f, suffixes[i]
 
-
+    return humansize(size)

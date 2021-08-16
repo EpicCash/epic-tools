@@ -4,6 +4,11 @@ body, html {
     color: #FAFFF7;
 }
 
+
+.footer {
+    z-index: 5;
+}
+
 .app_head {
     background-image: url('/static/bg2.png');
     color: #FAFFF7;
@@ -30,10 +35,12 @@ button, .btn {
 .top-cards {
     background-color: rgba(16,17,20, 0.75)!important;
     font-color: #EAEFE7;
+    margin-bottom: 10px !important;
+    padding-bottom: 5px !important;
 }
 
 .soft-cards {
-    min-height: 190px;
+    min-height: 220px;
 }
 
 .footer {
@@ -79,8 +86,6 @@ button, .btn {
     display: inline-block;
     width: 1em;
     height: 1em;
-    border-radius: 50%;
-    -webkit-animation: pulse-animation 2s infinite linear;
 }
 
 @-webkit-keyframes pulse-animation {

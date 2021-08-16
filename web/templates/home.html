@@ -18,36 +18,28 @@
 </div>
 
 <!-- SUCCESS WALLET CREATION , 24 WORDS SEED PHRASE -->
-<div class="col-8 text-center hidden" id="wallet_created_screen">
+<div class="col-8 text-center hidden" id="wallet_created_screen"
+     style="margin-top: 15px!important">
     <div class="card card-stats">
         <div class="card-header card-header-rose card-header-icon">
             <div class="card-icon">
                 <i class="material-icons">vpn_key</i>
             </div>
 
-            <h3 class="card-title mb-4">24-word seed phrase</h3>
-
-            <hr />
-            <p id="creation_response" class="mb-2 fs-5 text-dark text-center"></p>
-            <hr />
-
-            <h4 class="card-title text-center my-2">
+            <h3 class="card-title mb-4">
+                24-word seed phrase |
                 <span class="material-icons text-warning">warning</span>
-                SAVE THIS NOW
-            </h4>
+                <small> SAVE THIS NOW!</small>
 
-            <button class="btn btn-success w-100 my-1" onclick="startAll()">
-                START EPIC SERVER
-            </button>
-        </div>
-        <div class="card-footer">
-            <div class="stats">
-                <i class="material-icons">info</i>
-                This is human readable version of your private key,
-                it is shown to you only once!
-            </div>
+            </h3>
+
+            <hr />
+            <p id="creation_response" class="m-3 fs-5 text-dark text-center bg-warning rounded p-2"></p>
         </div>
     </div>
+    <button class="btn btn-success w-100 my-1" onclick="startServer()">
+        CONFIRM SEED PHRASE IS SAVED
+    </button>
 </div>
 
 <!-- Modal DB FIX-->
@@ -60,14 +52,23 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-3">
-                Should be used when <code>chain_data </code> directory is corrupted
-                and server is not working (black window without response)<br />
-                This will backup your <code>chain_data </code> to <code> old_chain_data</code> directory,
-                and restore from pre-installed blockchain file.
+                This will backup your <code>chain_data</code> to <code>old_chain_data</code> directory,
+                and restore from selected source or previously created backup.
+                <p class="text-muted my-3"><small><span id="db_fix_help"></span></small></p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="restoreChainData()"
-                    data-bs-dismiss="modal">Confirm</button>
+            <div class="modal-footer mt-3">
+                <button type="button" id="upload_dir_btn" class="btn btn-info mx-2" onclick="uploadChainData()">
+                    Upload new chain_data
+                </button>
+
+                <button type="button" id="confirm_restore_btn" class="btn btn-success hidden mx-2" onclick="restoreChainData()">
+                    Use local backup
+                </button>
+
+                <button type="button" id="exit_btn" class="btn btn-success hidden mx-2" data-bs-dismiss='modal'>
+                    Confirm
+                </button>
+
             </div>
         </div>
     </div>
@@ -82,11 +83,11 @@
                 <h5 class="modal-title">Clearing peers data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body py-3">
+            <div class="modal-body py-3 mt-3">
                 This should be used in case of synchronization problems like small number of peers.
-                Server will be stopped and <code>chain_data/peer </code> directory cleared.
+                Server will be stopped and <code>chain_data/peer</code> directory cleared.
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer mt-3">
                 <button type="button" class="btn btn-success" onclick="removePeers()"
                     data-bs-dismiss="modal">Confirm</button>
             </div>

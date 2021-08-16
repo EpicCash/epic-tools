@@ -1,50 +1,48 @@
 <div class="row d-flex justify-content-center">
-    <div class="col-12">
-        <div class="text-center">
-            <a href="home.html">
-                <img src="/static/epicenter.png" width="500px" alt="">
-            </a>
-        </div>
-        <div class="col-12">
-            <div class="row">
-                <div class="col-4 text-center">
-                    <div class="card top-cards">
-                        <div class="card-body text-white fs-6">
-                            Blockchain height<br />
-                            <i class="fas fa-cubes"></i>
-                            <span class="" id="blockchainHeight">
-                                <div class="spinner-border spinner-border-sm" role="status"></div>
-                            </span>
-                        </div>
+    <div class="col-12 text-center">
+        <a href="home.html">
+            <img src="/static/epicenter.png" width="500px" alt="" style="margin-bottom: 0px!important; padding: 0px !important">
+        </a>
+    </div>
+    <div class="col-11">
+        <div class="row">
+            <div class="col-4 text-center" >
+                <div class="card top-cards" style="margin: 6px !important; padding: 3px !important">
+                    <div class="card-body text-white fs-6">
+                        Blockchain height<br />
+                        <i class="fas fa-cubes"></i>
+                        <span class="" id="blockchainHeight">
+                            <div class="spinner-border spinner-border-sm" role="status"></div>
+                        </span>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-8">
-                    <div class="card top-cards">
-                        <div class="card-body">
-                            <div class="row text-white">
-                                <div class="col-3 text-end">
-                                    <i class="fas fa-microchip"></i> CPU:<br>
-                                    <i class="fas fa-gamepad"></i> GPU:
-                                </div>
-                                <div class="col-9 text-start">
-                                    <span class="fs-6" id="cpu_info">
-                                        <div class="spinner-border spinner-border-sm" role="status"></div>
-                                    </span><br>
-                                    <span class="fs-6" id="gpu_info">
-                                        <div class="spinner-border spinner-border-sm" role="status"></div>
-                                    </span>
-                                </div>
+            <div class="col-8">
+                <div class="card top-cards" style="margin: 6px !important; padding: 3px !important">
+                    <div class="card-body">
+                        <div class="row text-white">
+                            <div class="col-3 text-end">
+                                <i class="fas fa-microchip"></i> CPU:<br>
+                                <i class="fas fa-gamepad"></i> GPU:
+                            </div>
+                            <div class="col-9 text-start">
+                                <span class="fs-6" id="cpu_info">
+                                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                                </span><br>
+                                <span class="fs-6" id="gpu_info">
+                                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-11 card top-cards mx-4" style="margin-top: 0px;">
-            <div class="console text-center my-3">
-                <code><span id="console"></span></code>
-            </div>
+    </div>
+    <div class="col-11 card top-cards mx-4" style="margin-top: 0px;">
+        <div class="console text-center my-2">
+            <code><span id="console"></span></code>
         </div>
     </div>
 </div>

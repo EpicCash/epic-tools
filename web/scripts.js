@@ -1,9 +1,11 @@
 var password = ''
 var sleepTime = 1500
 var spinner = '<div class="spinner-border spinner-border-sm" role="status"></div>'
+var poolUpdaterWorking = 0
 
 // Check if wallet is already created or it is first time
 isWallet()
+
 // Check for user hardware details
 hardwareInfo()
 
@@ -14,6 +16,14 @@ async function greet() {
     var greetings = await eel.greetings()()
     console.log(greetings)
     send_console(greetings)
+}
+
+function copyToClipboard(element) {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($(element).text()).select();
+    document.execCommand("copy");
+    $temp.remove();
 }
 
 function callback(current_time){
@@ -46,13 +56,55 @@ async function removePeers() {
     }
 }
 
+async function checkChainData() {
+    restoreFixModal()
+    var isBackup = await eel.first_backup()()
+    var restore_button = $('#confirm_restore_btn')
+    console.log(isBackup)
+//    if (isBackup) {
+//        restore_button.removeClass('hidden')
+//    }
+}
+
 async function restoreChainData() {
     send_console('Restoring chain_data... ' + spinner)
+    var upload_button = $('#upload_dir_btn')
+    var restore_button = $('#confirm_restore_btn')
+    restore_button.addClass('hidden')
+
     var data = await eel.restore_chain_data()()
     if (data) {
-        await sleep(5000)
+        await sleep(2000)
         send_console('Restoring completed!', remove=1)
+        $('#db_fix_help').html("✅  Chain data updated successfully.")
+        $('#exit_btn').removeClass('hidden')
+    } else {
+        $('#db_fix_help').html("⚠️ Problems with local backup, please use different source.")
     }
+}
+
+async function uploadChainData() {
+    var upload_button = $('#upload_dir_btn')
+	upload_button.html(upload_button.get(0).innerText + ' ' + spinner)
+
+    var chain_data = await eel.upload_chain_data()()
+
+	if (chain_data) {
+	    send_console('Restoring completed!', remove=1)
+		$('#db_fix_help').html("✅   Chain data updated successfully.")
+		upload_button.addClass('hidden')
+		$('#exit_btn').removeClass('hidden')
+	} else {
+	    $('#db_fix_help').html("⚠️ Problems with this source, please select <code>chain_data</code> directory.")
+	    upload_button.html("Wrong chain_data directory, try again")
+	}
+}
+
+function restoreFixModal() {
+    $('#upload_dir_btn').html('Upload new chain_data')
+	$('#upload_dir_btn').removeClass('hidden')
+    $('#exit_btn').addClass('hidden')
+    $('#db_fix_help').html("")
 }
 
 async function isWallet() {
@@ -86,16 +138,19 @@ async function createWallet() {
     } else {
         send_console('')
         create_wallet_screen.addClass('hidden')
+        creation_response.html(spinner)
         wallet_created_screen.removeClass('hidden')
+
         var response = await eel.create_wallet(pass1)()
         if (response) {
-            send_console('Please backup in non-digital form your seed phrase:')
+            send_console('Please backup in non-digital form your seed phrase:', remove=1)
             creation_response.html(response)
             $('.software_tabs').removeClass('hidden')
             $('.software_content').removeClass('hidden')
         } else {
             send_console('Wallet already exists', remove=1)
             wallet_created_screen.addClass('hidden')
+            $('.top-body').removeClass('hidden')
             $('.software_tabs').removeClass('hidden')
             $('.software_content').removeClass('hidden')
         }
@@ -110,23 +165,56 @@ function cleanBalances() {
     $('#spendable').html(val)
     $('#wallet_response').html(val)
 }
+
 async function walletBalance() {
     $('#wallet_refresh_btn').addClass('fa-spin')
     cleanBalances()
-    if (await eel.is_running('epic.exe')()) {
-        var balance = await eel.wallet_balance()()
-        if (balance) {
-            $('#wallet_height').html(balance.height)
-            $('#total').html(balance.total)
-            $('#wait_conf').html(balance.wait_conf)
-            $('#locked').html(balance.locked)
-            $('#spendable').html(balance.spendable)
-        }
-    } else {
-        $('#wallet_height').html('Please run epic.exe server first')
+    var balance = await eel.wallet_balance()()
+    if (balance[0]) {
+        $('#wallet_height').html(balance[0].height)
+        $('#total').html(balance[0].total)
+        $('#wait_conf').html(balance[0].wait_conf)
+        $('#locked').html(balance[0].locked)
+        $('#spendable').html(balance[0].spendable)
     }
     $('#wallet_refresh_btn').removeClass('fa-spin')
+}
 
+async function walletData() {
+    $("#listenerIP").html('')
+    var data = await eel.wallet_data()()
+
+    if (data.ext_ip) {
+        $("#listenerIP").append("Wallet IP: ")
+        $("#listenerIP").append("<a id='ip_link' href='#' class='text-dark mr-2' data-bs-toggle='tooltip' data-bs-placement='top' title='Click to copy'>" + data.ext_ip + ':' + data.port + '</a>');
+        $("#listenerIP").attr("onClick", "copyToClipboard($('#ip_link'))")
+
+        if (data.open_port) {
+            $("#listenerIP").append("<span class='fs-6 indicator online' data-bs-toggle='tooltip' data-bs-placement='top' title='Port is open'></span>")
+        } else {
+            $("#listenerIP").append("<span class='fs-6 indicator offline' data-bs-toggle='tooltip' data-bs-placement='top' title='Port is closed'></span>")
+        }
+    }
+}
+
+async function withdrawFromWallet() {
+    wallet_console = $('#wallet_help')
+    wallet_console.text('')
+    var address = $('#address').val()
+
+    if (address) {
+        wallet_console.html(spinner)
+        var response = await eel.withdraw_from_wallet(address)()
+
+        if (response[1]) {
+            wallet_console.text('⚠️ ' + response[1])
+        } else {
+            wallet_console.text('✅    Success!')
+            walletBalance()
+        }
+    } else {
+        wallet_console.text('⚠️ Please provide recipient address')
+    }
 }
 
 function changeBtn(btn, toggle) {
@@ -175,10 +263,21 @@ function changeBtnFunc(btn, toggle) {
     }
 }
 
+async function chainCheck() {
+    var chainDataExists = await eel.chain_data_exists()()
+    var outdated = await eel.chain_data_outdated()()
+
+    if (!chainDataExists || outdated) {
+        send_console("No <u>chain_data</u> directory found, or it's greatly outdated. You can restore/upload from snapshot or continue to synchronize from block 0 (may take several hours)")
+    }
+}
+
 // Function to START epic.exe server
 async function startServer() {
     $('#wallet_created_screen').addClass('hidden')
-    $('#mining_screen').removeClass('hidden')
+    $('.top-body').removeClass('hidden')
+
+    chainCheck()
     await startListener()
     await eel.start_server()
     changeBtnFunc($('#serverButton'), 'stop')
@@ -187,6 +286,7 @@ async function startServer() {
     changeStatus($('#serverStatus'), 'Working..')
     changeBtn($('#serverButton'), 'stop')
     rollbackCheck()
+    poolUpdater(3000)
     await sleep(3000)
     await nodeData()
     await walletBalance()
@@ -196,6 +296,8 @@ async function startServer() {
 async function stopServer() {
     eel.close_process('epic.exe')
     await sleep(1000)
+    $('#serverSize').html('')
+    $('#serverPeers').html('')
     changeBtnFunc($('#serverButton'), 'start')
     changeBtn($('#serverButton'), 'start')
     changeIcon($('#serverIcon'), 'error')
@@ -246,7 +348,7 @@ async function startListener() {
     changeBtn($('#listenerButton'), 'stop')
     changeIcon($('#listenerIcon'), 'online')
     changeStatus($('#listenerStatus'), 'Listening..')
-    $('#listenerPort').html('3415')
+    await walletData()
 }
 
 // Function to STOP epic-wallet.exe
@@ -256,16 +358,21 @@ async function stopListener() {
     changeBtn($('#listenerButton'), 'start')
     changeIcon($('#listenerIcon'), 'offline')
     changeStatus($('#listenerStatus'), 'Stopped')
+    $("#listenerIP").html('')
+
 }
 
 async function poolUpdater(time) {
-    while (true) {
-        obj = await eel.pool_updater()()
-        obj.forEach(function (item, index) {
-            functionName = item;
-            window[functionName]();
-        });
-        await sleep(time)
+    if (!poolUpdaterWorking) {
+        poolUpdaterWorking = 1
+        while (true) {
+            obj = await eel.pool_updater()()
+            obj.forEach(function (item, index) {
+                functionName = item;
+                window[functionName]();
+            });
+            await sleep(time)
+        }
     }
 }
 
@@ -284,8 +391,10 @@ async function rollbackCheck() {
 
 async function nodeData() {
     var data = await eel.node_data()()
+    var size = await eel.blockchain_size(str=true)()
     if (data) {
         $('#serverPeers').html(data.connections)
+        $('#serverSize').html(size)
     }
 }
 
@@ -316,8 +425,11 @@ async function startAll() {
     var btn_icon = $('#start_mining_icon')
     btn_spinner.removeClass('hidden')
 
-    // Check if there si existing db_backup
+    // Check if there is existing db_backup
     var firstBackup = await eel.first_backup()()
+
+    // Check if there is chain_data folder
+    chainCheck()
 
     // If listener will start, means wallet is working
     // and we can start mining
@@ -336,7 +448,7 @@ async function startAll() {
         btn.addClass('btn-warning')
         btn_icon.html('<span class="material-icons">pause_circle</span>')
         btn.attr("onClick", "stopMining()")
-        poolUpdater(5000)
+        poolUpdater(3000)
 
     } else {
         isWallet()
@@ -354,17 +466,3 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-//async function getFile() {
-//var file_path = await eel.upload_file()();
-//var button = $('#upload_file')
-//	if (file_path) {
-//		console.log(file_path);
-//		await eel.edit_server_toml(file_path)()
-//		button.removeClass("btn-warning")
-//		button.addClass("btn-success")
-//		button.text("File successfully updated!")
-//	} else {
-//		button.addClass("btn-warning")
-//	    button.text("Wrong file, try again")
-//	}
-//}
