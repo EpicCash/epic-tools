@@ -1,3 +1,6 @@
+import json
+
+import requests
 from setuptools._vendor import more_itertools
 from fernet import Fernet
 from tinydb import Query
@@ -137,6 +140,11 @@ class Wallet:
     def balance(self):
         b = []
         msg = None
+
+        def usd_value():
+            url = "https://api.coingecko.com/api/v3/simple/price?ids=epic-cash&vs_currencies=usd"
+            return json.loads(requests.get(url).content.decode('utf-8'))['epic-cash']['usd']
+
         try:
             # Execute info command
             process = self._execute(['info'])
@@ -171,6 +179,7 @@ class Wallet:
                 'wait_final': float(b[-3]),
                 'locked': float(b[-2]),
                 'spendable': float(b[-1]),
+                'usd_value': f"{round(usd_value() * float(b[-5]), 2)} USD",
                 'height': b[0]
                 }
             return balances, msg

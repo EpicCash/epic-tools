@@ -15,6 +15,13 @@ body, html {
     box-shadow: 0px 2px 3px black;
 }
 
+.top_wallet_card {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 20px;
+}
+
 .software_tabs {
     color: #FAFFF7;
     text-align: center;

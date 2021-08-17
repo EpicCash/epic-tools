@@ -1,57 +1,46 @@
-<div class="tab-content tab-space mt-0 pt-0">
-
 <div class="card card-stats soft-cards">
-    <div class="card-header card-header-info card-header-icon">
+    <div class="card-header card-header-info card-header-icon mb-1">
         <div class="card-icon">
             <i class="material-icons">account_balance_wallet</i>
         </div>
-        <p class="card-category">Epic-Cash wallet balance</p>
-        <div class="" id="balances_response">
-            <div id="accordion" role="tablist">
-                <div class="card-collapse">
-                    <div role="tab" id="headingOne">
-                        <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="collapsed">
-                            <span class="h3 text-dark"><span id="total"></span> EPIC</span>
-                            <span class="h3 text-dark"><i class="material-icons">keyboard_arrow_down</i></span>
-                        </a>
-<!--                            <span class="text-dark">~8.34 USD</span>-->
-                    </div>
-                    <div id="collapseOne" class="collapse hide" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" style="">
-                        <table class="table table-borderless fs-6">
-                            <tbody>
-                                <tr><td class="text-start">Waiting Confirmation</td><td id="wait_conf">0</td></tr>
-                                <tr><td class="text-start">Locked</td><td id="locked">0</td></tr>
-                                <tr><td class="text-start">Spendable</td><td id="spendable">0</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
+        <div class="top_wallet_card my-2">
+            <p class="card-category">Wallet balance as of height:
+                <span id="wallet_height"></span>
+                <a href="#" onclick="walletBalance()" class="text-dark">
+                    <i id="wallet_refresh_btn" style="font-size: 16px; width: 16px"
+                       class="fa fa-refresh mx-2"></i>
+                </a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#wallet_settings_modal" class="text-dark">
+                    <i style="font-size: 16px; width: 16px" class="fas fa-cog"></i>
+                </a>
+            </p>
+        </div>
+
+        <div class="row" id="balances_response">
+            <div class="col-12 mt-2">
+                <span class="h2 text-dark">
+                    <img class="img mb-1" src="/static/epiccoin_45px.png" />
+                    <span id="total">0.0000</span>
+                </span>
+                <br />
+                <span class="fs-5 text-dark">
+                    <small id="usd_value">0.00 USD</small>
+                </span>
             </div>
         </div>
     </div>
 
-    <div class="card-footer">
-        <div class="stats">
-            Balance as of height:
-            <span class="ml-2" id="wallet_height"> N/A </span>
-        </div>
-        <div class="text-end">
-            <a href="#" onclick="walletBalance()" class="text-dark">
-                <i id="wallet_refresh_btn" class="fa fa-refresh"></i> refresh
-            </a>
-        </div>
-    </div>
-    <div class="card-footer">
-        <button onclick="" class="btn btn-sm btn-success w-100"
+    <div class="card-footer mt-4">
+        <button class="btn btn-sm btn-success w-100"
                 data-bs-toggle="modal" data-bs-target="#wallet_modal">
             <i class="fas fa-share"></i> Withdraw
         </button>
-        </div>
     </div>
 </div>
 
 
-<!-- Modal WALLET-->
+<!-- Modal WALLET -->
 <div class="modal fade" id="wallet_modal" data-bs-backdrop="static" data-bs-keyboard="false"
      tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -89,3 +78,45 @@
         </div>
     </div>
 </div>
+
+<!-- Modal WALLET SETTINGS -->
+<div class="modal fade" id="wallet_settings_modal" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Epic-Cash Wallet Settings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-3 mt-3">
+                <h4 class="text-dark mt-2">
+                    Wallet balance details
+                </h4>
+                <hr class="my-1"/>
+                <div class="row text-dark">
+                    <div class="col-6">
+                        Waiting Confirmation
+                    </div>
+                    <div class="col-6">
+                        <span id="wait_conf"></span>
+                    </div>
+
+                    <div class="col-6">
+                        Locked:
+                    </div>
+                    <div class="col-6">
+                        <span id="locked"></span>
+                    </div>
+
+                    <div class="col-6">
+                        Spendable
+                    </div>
+                    <div class="col-6">
+                        <span id="spendable"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

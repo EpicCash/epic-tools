@@ -120,6 +120,7 @@ async function isWallet() {
         $('#wallet_created_screen').addClass('hidden')
     } else {
         $('.top-body').removeClass('hidden')
+        walletBalance()
         greet()
     }
 }
@@ -157,25 +158,30 @@ async function createWallet() {
     }
 }
 
-function cleanBalances() {
-    var val = ''
-    $('#total').html(val)
+function cleanBalances(val='') {
     $('#wait_conf').html(val)
     $('#locked').html(val)
     $('#spendable').html(val)
-    $('#wallet_response').html(val)
+
+    if (val === '') {
+        $('#wallet_height').html(val)
+        $('#usd_value').html(val)
+        $('#total').html(val)
+        $('#wallet_response').html(val)
+    }
 }
 
 async function walletBalance() {
     $('#wallet_refresh_btn').addClass('fa-spin')
-    cleanBalances()
+    cleanBalances(val=spinner)
     var balance = await eel.wallet_balance()()
     if (balance[0]) {
-        $('#wallet_height').html(balance[0].height)
-        $('#total').html(balance[0].total)
-        $('#wait_conf').html(balance[0].wait_conf)
-        $('#locked').html(balance[0].locked)
-        $('#spendable').html(balance[0].spendable)
+        $('#wallet_height').html(balance[0].height.toLocaleString('en-US'))
+        $('#total').html(balance[0].total.toFixed(4))
+        $('#wait_conf').html(balance[0].wait_conf.toFixed(4))
+        $('#locked').html(balance[0].locked.toFixed(4))
+        $('#spendable').html(balance[0].spendable.toFixed(4))
+        $('#usd_value').html(balance[0].usd_value)
     }
     $('#wallet_refresh_btn').removeClass('fa-spin')
 }
@@ -185,14 +191,13 @@ async function walletData() {
     var data = await eel.wallet_data()()
 
     if (data.ext_ip) {
-        $("#listenerIP").append("Wallet IP: ")
-        $("#listenerIP").append("<a id='ip_link' href='#' class='text-dark mr-2' data-bs-toggle='tooltip' data-bs-placement='top' title='Click to copy'>" + data.ext_ip + ':' + data.port + '</a>');
+        $("#listenerIP").html("<a id='ip_link' href='#' class='text-dark' data-bs-toggle='tooltip' data-bs-placement='top' title='Click to copy'>" + data.ext_ip + '</a>');
         $("#listenerIP").attr("onClick", "copyToClipboard($('#ip_link'))")
-
+        $("#listenerPort").text(data.port)
         if (data.open_port) {
-            $("#listenerIP").append("<span class='fs-6 indicator online' data-bs-toggle='tooltip' data-bs-placement='top' title='Port is open'></span>")
+            $("#listenerPortCheck").html("<span class='fs-6 indicator online' data-bs-toggle='tooltip' data-bs-placement='top' title='Port is open'></span>")
         } else {
-            $("#listenerIP").append("<span class='fs-6 indicator offline' data-bs-toggle='tooltip' data-bs-placement='top' title='Port is closed'></span>")
+            $("#listenerPortCheck").html("<span class='fs-6 indicator offline' data-bs-toggle='tooltip' data-bs-placement='top' title='Port is closed'></span>")
         }
     }
 }
@@ -409,9 +414,10 @@ async function stopMining() {
     await stopCPU()
     await stopGPU()
     await sleep(3000)
-    btn.addClass('btn-success')
-    btn.removeClass('btn-warning')
     btn_spinner.addClass('hidden')
+    btn.removeClass('btn-warning')
+    btn.addClass('btn-success')
+    $('#start_mining_text').text('Quick Mining')
     btn_icon.html('<span class="material-icons">play_circle_filled</span>')
     btn.attr("onClick", "startAll()")
 }
@@ -446,6 +452,7 @@ async function startAll() {
         btn_spinner.addClass('hidden')
         btn.removeClass('btn-success')
         btn.addClass('btn-warning')
+        $('#start_mining_text').text('Stop Mining')
         btn_icon.html('<span class="material-icons">pause_circle</span>')
         btn.attr("onClick", "stopMining()")
         poolUpdater(3000)

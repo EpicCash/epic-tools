@@ -8,9 +8,18 @@
                     <i class="material-icons">dns</i>
                 </div>
                 <p class="card-category">Node statistics</p>
-                <h4 class="card-title mt-2">Status: <span id="serverStatus"></span></h4>
-                <h4 class="card-title mt-2">Peers: <span id="serverPeers"></span></h4>
-                <h4 class="card-title mt-2">Blockchain: <span id="serverSize"></span></h4>
+                <div class="row d-flex justify-content-end align-items-m">
+                    <div class="col-6 text-end">
+                        <h4 class="text-dark">Status:</h4>
+                        <h4 class="text-dark">Peers:</h4>
+                        <h4 class="text-dark">Blockchain:</h4>
+                    </div>
+                    <div class="col-6 text-end">
+                        <h4 class="text-dark" id="serverStatus"></h4>
+                        <h4 class="text-dark" id="serverPeers"></h4>
+                        <h4 class="text-dark" id="serverSize"></h4>
+                    </div>
+                </div>
             </div>
             <div class="card-footer mb-2">
                 <button class="btn btn-sm w-100 btn-success" name="Server"
@@ -28,8 +37,22 @@
                     <i class="material-icons">sensors</i>
                 </div>
                 <p class="card-category">Epic-Cash wallet listener</p>
-                <h4 class="card-title mt-2">Status: <span id="listenerStatus"></span></h4>
-                <h4 id="listenerIP" class="card-title mt-2"></h4>
+
+                <div class="row d-flex justify-content-end">
+                    <div class="col-5 text-end">
+                        <h4 class="text-dark">Status:</h4>
+                        <h4 class="text-dark">Port:</h4>
+                        <h4 class="text-dark">IP:</h4>
+                    </div>
+                    <div class="col-7 text-end">
+                        <h4 class="text-dark" id="listenerStatus"></h4>
+                        <h4 class="text-dark">
+                            <span id="listenerPortCheck"></span>
+                            <span id="listenerPort"></span>
+                        </h4>
+                        <h4 class="text-dark" id="listenerIP"></h4>
+                    </div>
+                </div>
             </div>
             <div class="card-footer mb-2">
                 <button class="btn btn-sm w-100 btn-success" name="Listener"

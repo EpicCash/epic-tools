@@ -116,7 +116,6 @@ class ProcessPool:
 
 
 def check_process(name):
-#     # print(name)
     # Iterate over the all the running process
     for process in psutil.process_iter():
         try:
