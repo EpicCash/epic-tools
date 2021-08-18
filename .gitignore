@@ -1,0 +1,10 @@
+/build/
+/data/
+/dist/
+/epic-software/
+/pyinstaller/
+/tests/
+/pyinstallet command.txt
+/Pipfile.lock
+/Pipfile
+/easy-miner/Epic_Easy_Miner.spec
