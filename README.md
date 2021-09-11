@@ -1,11 +1,12 @@
-# Epic-Tools: Easy miner v1.0
+# Epic-Tools: Easy Miner v2.0
 
 All-in-one package for quick start solo mining with Epic-Cash.
 
-Win64 build: https://github.com/EpicCash/epic-tools/releases/download/1.0/EpicEasyMiner.exe
+Win64 build: https://github.com/EpicCash/epic-tools/releases/download/v2.0.0/easyminer_v2.exe
 
 ### Details and guides @ Medium: 
-https://blacktyg3r.medium.com/epic-tools-epic-easy-miner-791cb64b178f
+- ver 1.0.0 https://blacktyg3r.medium.com/epic-tools-epic-easy-miner-791cb64b178f
+- ver 2.0.0 
 
 Made with:
 - Python and EEL module for Electron like apps

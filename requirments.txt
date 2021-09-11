@@ -4,6 +4,7 @@ bottle-websocket==0.2.9
 certifi==2021.5.30
 cffi==1.14.5
 chardet==4.0.0
+command_runner
 Eel==0.14.0
 fernet==1.0.1
 future==0.18.2
@@ -19,6 +20,7 @@ psutil==5.8.0
 py-cpuinfo==8.0.0
 pyaes==1.6.1
 pycparser==2.20
+pyngrok
 pyparsing==2.4.7
 pywin32-ctypes==0.2.0
 requests==2.25.1
