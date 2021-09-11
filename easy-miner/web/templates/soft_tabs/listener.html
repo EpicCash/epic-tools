@@ -1,0 +1,94 @@
+<div class="card card-stats soft-cards">
+    <div class="card-header card-header-primary card-header-icon">
+        <div class="card-icon">
+            <i class="material-icons">hearing</i>
+        </div>
+
+        <!-- LISTENER TOP STATUS -->
+        <div class="top_soft_card row d-flex mt-1 justify-content-between align-content-center">
+            <div class="col-6 card-category text-start text-muted">
+                HTTP/S LISTENER
+            </div>
+            <div class="col-6  text-muted text-uppercase text-end">
+                <span>STATUS:</span>
+                <span id="listenerStatus">
+                    <span class="material-icons align-middle text-muted">help_outline</span>
+                </span>
+            </div>
+
+            <!-- LISTENER TAB TOP BUTTONS -->
+            <div class="col-6 px-2">
+                <button class="dropdown-toggle btn btn-sm btn-primary w-100" type="button" id="dropdownMenuButton2"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="material-icons">settings</span> Settings
+                    <div class="ripple-container"></div>
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start"
+                     style="position: absolute; top: 41px; left: 1px; will-change: top, left;">
+                    <h6 class="dropdown-header">Wallet Files</h6>
+                    <a class="dropdown-item" href="#" onclick="openTOML(file='wallet')">Open config TOML file</a>
+                    <a class="dropdown-item" href="#" onclick="openLogFile(file='wallet')">Open log file</a>
+                </div>
+            </div>
+
+            <div class="col-6 px-2">
+                <button class="btn btn-sm btn-success w-100" name="Listener"
+                    id="listenerButton" onclick="startListener()"> Start
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LISTENER TAB TABLE -->
+    <div class="row d-flex justify-content-between align-items-center my-2 mx-1">
+        <div class="col-7">
+            <div class="table-responsive">
+                <table class="table table-borderless table-hover">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="material-icons align-middle">settings_input_antenna</span>
+                            </td>
+                            <td>PORT</td>
+                            <td class="text-right">
+                                <span class="mr-1 listenerPortCheck"></span>
+                                <span class="listenerPort">
+                                    <span class="material-icons align-middle text-muted">help_outline</span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="material-icons align-middle">public</span>
+                            </td>
+                            <td>LISTENER IP</td>
+                            <td class="listenerIP text-right">
+                                <span class="material-icons align-middle text-muted">help_outline</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="c-footer">
+        <hr class="text-muted mx-3 my-0" />
+        <div class="text-muted px-3 my-2 ml-2">
+            <p>
+                <span class="fw-bold">HTTP/S Listener</span> is used to receive network transactions to your local wallet.
+               Must be working and connected to running node when mining or receiving transactions from others.
+            </p>
+                <span class="indicator online"></span> - your port is open and reachable for others<br />
+            <p>
+                <span class="indicator error"></span> - your port is closed in modem/router or
+                system firewall is blocking it, receiving transactions via HTTP/S is impossible.
+            </p>
+            <p>
+                To solve this problem you can
+                <a target="_blank" href="https://www.google.com/search?q=how+to+open+%2F+forward+ports+&sxsrf=AOaemvISGjzokNbxOMqhuGyKzvkqOgU8eg%3A1630937371511&ei=GyE2YdfYHoiU8gKVzYDgAQ&oq=how+to+open+%2F+forward+ports+&gs_lcp=Cgdnd3Mtd2l6EAMyBAgjECcyBggAEBYQHjIGCAAQFhAeSgQIQRgAUME4WME4YOY6aABwAngAgAFgiAGdAZIBATKYAQCgAQHAAQE&sclient=gws-wiz&ved=0ahUKEwiX0reVw-ryAhUIilwKHZUmABwQ4dUDCA4&uact=5" class="text-reset fw-bold"><i class="fas fa-globe"></i> open your listener port</a>
+                or generate Ngrok address in Wallet App.
+            </p>
+        </div>
+    </div>
+</div>

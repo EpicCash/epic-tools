@@ -1,0 +1,115 @@
+<nav>
+  <div class="nav nav-tabs" id="wallet_receive_tabs" role="tablist">
+      <button class="nav-link hidden" id="tab_method" data-bs-toggle="tab"
+            data-bs-target="#receive_method_screen" type="button" role="tab"  aria-selected="true">
+      </button>
+  </div>
+</nav>
+
+
+<div class="tab-content" id="wallet-receive-tabs">
+
+    <!-- PORT / LISTENER WARNING MSG -->
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <div class="alert alert-warning" hidden id="receive_port_feedback">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <i class="material-icons">close</i></button>
+                <span>
+                    Looks like your port is not open -
+                    use <b>Ngrok</b> address to receive transactions.
+                </span>
+            </div>
+
+            <div class="alert alert-danger" hidden id="receive_listener_feedback">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <i class="material-icons">close</i></button>
+                <span><b> Error </b> your listener is not working.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- METHOD SCREEN -->
+    <div class="tab-pane fade show active" id="receive_method_screen"
+         role="tabpanel" aria-labelledby="tab_method">
+        <div class="row justify-content-center ">
+            <h5 class="mt-1">
+                Use this address to receive Epic-Cash
+                via HTTP/S transaction.
+            </h5>
+            <div class="col-12 text-center local_address_section">
+
+                <hr class="text-muted mx-4 mb-3 mt-3" />
+                <a href="#" class="text-dark fs-5" onclick="copyWalletAddress()">
+                    <span class="listenerIP"></span>:<span class="listenerPort"></span>
+                    <span class="ml-3 px-2 py-2 listenerPortCheck"></span>
+                </a>
+                <br />
+                <a class="text-muted mt-0 mb-2" href="#" onclick="copyWalletAddress()"
+                   style="font-size: 0.8rem;">
+                    click to copy
+                </a>
+                <hr class="text-muted mx-4 mt-2 mb-2" />
+            </div>
+        </div>
+
+        <!-- NGROK SECTION-->
+        <div class="row justify-content-center mt-2 mb-2">
+            <div class="col-12 text-center px-3 ngrok_section" hidden>
+                <hr class="text-muted mx-4 mb-3 mt-3" />
+                <a href="#" class="text-dark fs-5" onclick="copyNgrokAddress()">
+                    <span class="ngrok_https_address"></span>
+                </a>
+                <br />
+                <a class="text-muted mt-0 mb-2" href="#" onclick="copyNgrokAddress()"
+                   style="font-size: 0.8rem;">
+                    click to copy
+                </a>
+                <hr class="text-muted mx-4 mt-2 mb-2" />
+            </div>
+        </div>
+
+        <!-- RUN NGROK -->
+        <div class="row justify-content-center mt-2 mb-2">
+            <div class="col-12 text-center px-3 d-inline">
+                <h5 class="my-2">
+                    <button onclick="generateNgrokAddress()" class="btn btn-default w-75 btn-wallet ml-4" id="ngrok_add">
+                        GENERATE NGROK ADDRESS
+                    </button>
+                    <a href="#" data-bs-toggle="tooltip" title="Use this when your listener address is unreachable (i.e. closed ports, firewall). When used first time takes time to download">
+                        <i class="ml-2 align-middle fs-5 far fa-question-circle text-dark"></i>
+                    </a>
+                </h5>
+            </div>
+        </div>
+
+        <!-- UPLOAD FILE -->
+        <div class="row justify-content-center mt-3 mb-2">
+            <div class="col-12 text-center">
+                <div class="d-inline">
+                    <button class="btn btn-default btn-wallet w-75 ml-4" id="response_btn"
+                            onclick="createResponseTX()">
+                        <span class="material-icons align-middle">upload_file</span>
+                        UPLOAD TRANSACTION FILE
+                    </button>
+                    <a href="#" data-bs-toggle="tooltip" title="Upload file sent to you and create response file">
+                        <i class="ml-2 align-middle fs-5 far fa-question-circle text-dark"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <span class="material-icons text-success mr-3">task_alt</span>
+        <strong class="me-auto">Address copied to clipboard</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>

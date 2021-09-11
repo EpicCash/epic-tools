@@ -1,0 +1,43 @@
+<div class="row d-flex justify-content-center align-items-center">
+        <div class="col-3 mt-1">
+                        <button class="btn btn-success w-100 btn-round" id="start_mining">
+                <span id="start_mining_icon">
+                    <span class="material-icons">play_circle_filled</span>
+                </span>
+                <span id="start_mining_text">
+                    Quick Mining
+                </span>
+                <span id="start_mining_spinner" class="hidden">
+                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                </span>
+            </button>
+        </div>
+    <div class="col-3 pl-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-4 mt-1 pr-0">
+                <img class="img align-middle" src="/static/epiccoin_45px.png" />
+            </div>
+            <div class="col-8 ml-0 mb-1 pl-1">
+                <div class="row justify-content-start">
+                    <div class="col-12 pr-0 text-start">
+                        <span class="text-muted" style="font-size: 0.8rem"><small>BALANCE</small></span>
+                    </div>
+                    <div class="col-12 text-start">
+                        <span class="fs-4 fw-bold align-middle text-dark wallet_spendable">
+                            0.0000
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-3">
+        <button class="btn btn-default btn-round w-100 px-1 on_wallet btn-wallet"
+                data-bs-toggle="offcanvas" data-bs-target="#offcanvasWallet"
+                onclick="checkPendingFileTX()">
+            <i class="fas fa-wallet mr-2"></i>
+             Wallet App <span class="material-icons">login</span>
+        </button>
+    </div>
+</div>

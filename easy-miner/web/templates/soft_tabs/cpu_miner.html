@@ -1,0 +1,71 @@
+<div class="card card-stats soft-cards">
+    <div class="card-header card-header-primary card-header-icon">
+        <div class="card-icon">
+            <i class="material-icons">developer_board</i>
+        </div>
+        <!-- CPU TOP STATUS -->
+        <div class="top_soft_card row d-flex mt-1 justify-content-between align-content-center">
+            <div class="col-6 card-category text-start text-muted">
+                CPU MINER
+            </div>
+            <div class="col-6  text-muted text-uppercase text-end">
+                <span>STATUS:</span>
+                <span id="cpuStatus">
+                    <span class="material-icons align-middle text-muted">help_outline</span>
+                </span>
+            </div>
+
+            <!-- CPU TAB TOP BUTTONS -->
+            <div class="col-6 px-2">
+                <button class="dropdown-toggle btn btn-sm btn-primary w-100" type="button" id="dropdownMenuButton3"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="material-icons">settings</span> Settings
+                    <div class="ripple-container"></div>
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3" x-placement="bottom-start"
+                     style="position: absolute; top: 41px; left: 1px; will-change: top, left;">
+                    <h6 class="dropdown-header">CPU Miner Files</h6>
+                    <a class="dropdown-item" href="#" onclick="openTOML(file='miner_cpu')">Open config TOML file</a>
+                    <a class="dropdown-item" href="#" onclick="openLogFile(file='miner_cpu')">Open log file</a>
+                </div>
+            </div>
+
+            <div class="col-6 px-2">
+                <button class="btn btn-sm btn-success w-100" name="cpuMiner"
+                    id="cpuButton" onclick="startCPU()"> Start
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CPU TAB TABLE -->
+    <div class="row d-flex justify-content-between align-items-center my-4 mx-3">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-borderless table-hover">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="material-icons align-middle">memory</span>
+                            </td>
+                            <td>HARDWARE CPU</td>
+                            <td class="text-right">
+                                <span class="fs-6 text-dark" id="cpu_info">
+                                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="c-footer">
+        <hr class="text-muted mx-3 my-0" />
+        <div class="text-muted px-3 my-2 ml-2">
+            <span class="fw-bold">CPU Miner</span> connected to your node or pool will use
+            <span class="fw-bold">RandomX</span> algorithm to earn Epic-Cash with your processor.
+        </div>
+    </div>
+</div>

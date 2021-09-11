@@ -1,0 +1,37 @@
+<!-- CREATE WALLET, PROVIDE PASSWORD -->
+<div class="container mt-5" id="wallet_create_password">
+    <div class="card card-profile">
+        <div class="card-header card-header-rose text-center">
+            <div class="card-avatar">
+                <img src="/static/default-avatar.png" class="picture-src">
+            </div>
+            <h3 class="card-title mt-2">
+                Create account
+            </h3>
+        </div>
+        <div class="card-body mt-3">
+            <div class="row justify-content-center">
+                <div class="col-8 text-center mt-3" >
+                    <div class="form-group mb-2">
+                        <label for="username"><span class="material-icons align-middle">face</span> Username</label>
+                        <input type="text" autocomplete="off" autofocus class="form-control" id="username">
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="password"><span class="material-icons align-middle">lock</span> Password</label>
+                        <input type="password" autocomplete="off"  class="form-control" id="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="password2"><span class="material-icons align-middle">lock</span> Repeat Password</label>
+                        <input type="password" autocomplete="off" class="form-control" id="password2">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer justify-content-center">
+            <button onclick="createWallet()" class="btn btn-success w-75 mt-3">
+                 Create Account
+            </button>
+        </div>
+    </div>
+</div>
+

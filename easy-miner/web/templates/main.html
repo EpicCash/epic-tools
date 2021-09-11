@@ -1,0 +1,59 @@
+<div class="card main-card">
+    <div class="card-header card-header-tabs card-header-default btn-wallet">
+        <div class="nav-tabs-navigation ">
+            <div class="nav-tabs-wrapper">
+
+                <!-- SOFT TABS -->
+                <span class="nav-tabs-title h4">EPIC</span>
+                <ul class="nav nav-tabs" data-tabs="tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active block-inline" href="#server" data-toggle="tab">
+                            <i class="material-icons">dns</i>SERVER
+                            <span id="serverIcon" class="ml-1 indicator"></span>
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#listener" data-toggle="tab">
+                            <i class="material-icons">hearing</i> LISTENER
+                            <span id="listenerIcon" class="ml-1 indicator"></span>
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cpu_miner" data-toggle="tab">
+                            <i class="material-icons">developer_board</i> CPU MINER
+                            <span id="cpuIcon" class="ml-1 indicator"></span>
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#gpu_miner" data-toggle="tab">
+                            <i class="material-icons">sports_esports</i> GPU MINER
+                            <span id="gpuIcon" class="ml-1 indicator"></span>
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <!-- SOFT CONTENT -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="server">
+                {% include 'soft_tabs/server.html' %}
+            </div>
+            <div class="tab-pane" id="listener">
+                {% include 'soft_tabs/listener.html' %}
+            </div>
+            <div class="tab-pane" id="cpu_miner">
+                {% include 'soft_tabs/cpu_miner.html' %}
+            </div>
+            <div class="tab-pane" id="gpu_miner">
+                {% include 'soft_tabs/gpu_miner.html' %}
+            </div>
+        </div>
+    </div>
+</div>

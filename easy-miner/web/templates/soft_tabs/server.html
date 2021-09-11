@@ -1,0 +1,172 @@
+<div class="card card-stats soft-cards">
+    <div class="card-header card-header-primary card-header-icon">
+        <div class="card-icon">
+            <i class="material-icons">dns</i>
+        </div>
+
+         <!-- SERVER TOP STATUS -->
+        <div class="top_soft_card row d-flex mt-1 justify-content-between align-content-center">
+            <div class="col-6 card-category  text-start text-muted">
+                EPIC SERVER
+            </div>
+            <div class="col-6  text-muted text-uppercase text-end">
+                <span>STATUS:</span>
+                <span id="serverStatus">
+                    <span class="material-icons align-middle text-muted">help_outline</span>
+                </span>
+            </div>
+
+            <!-- SERVER TAB TOP BUTTONS -->
+            <div class="col-6 px-2">
+                <button class="dropdown-toggle btn btn-sm btn-primary w-100" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="material-icons">settings</span> Settings
+                    <div class="ripple-container"></div>
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start"
+                     style="position: absolute; top: 41px; left: 1px; will-change: top, left;">
+
+                    <h6 class="dropdown-header">Database Tools</h6>
+                    <a class="dropdown-item" href="#" onclick="uploadChainData()">
+                        <span class="material-icons mx-2 align-middle">restore_page</span>
+                        Restore / Upload New Database
+                    </a>
+                    <a class="dropdown-item" href="#" id="backup_db" onclick="backupDB()">
+                        <span class="material-icons mx-2 align-middle">backup</span>
+                        Backup Existing Database
+                    </a>
+                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#fix_peers">
+                        <span class="material-icons mx-2 align-middle">person_remove</span>
+                        Clear Peers Directory
+                    </a>
+
+                    <h6 class="dropdown-header">Server Files</h6>
+                    <a class="dropdown-item" href="#" onclick="openLogFile(file='server')">
+                        <span class="material-icons mx-2 align-middle">summarize</span>
+                        Open Log File
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="openTOML(file='server')">
+                        <span class="material-icons mx-2 align-middle">tune</span>
+                        Open Configuration File
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="eel.open_server_dir()">
+                        <span class="material-icons mx-2 align-middle">source</span>
+                        Open Blockchain Directory
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-6 px-2">
+                <button class="btn btn-sm btn-success w-100" name="Server"
+                    id="serverButton" onclick="startServer()"> Start
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SERVER TAB TABLE -->
+    <div class="row d-flex justify-content-between align-items-end mx-1 mt-2">
+<!--                <div class="col-3"></div>-->
+        <div class="col-7">
+            <div class="table-responsive">
+                <table class="table table-borderless table-hover">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="material-icons align-middle">numbers</span>
+                            </td>
+                            <td>HEIGHT</td>
+                            <td id="serverHeight" class="text-right">
+                                <span class="material-icons align-middle text-muted">help_outline</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="material-icons align-middle">supervisor_account</span>
+                            </td>
+                            <td>PEERS</td>
+                            <td id="serverPeers" class="text-right">
+                                <span class="material-icons align-middle text-muted">
+                                    help_outline
+                                </span>
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: none!important;">
+                            <td>
+                                <span class="material-icons align-middle">storage</span>
+                            </td>
+                            <td>SPACE USAGE</td>
+                            <td id="serverSize" class="text-right">
+                                <span class="material-icons text-muted align-middle" >
+                                    help_outline
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-5 text-center align-top">
+
+        </div>
+    </div>
+    <div class="c-footer">
+        <hr class="text-muted mx-3 my-0" />
+        <div class="text-muted px-3 my-2 ml-2">
+            <span class="fw-bold">Epic Server (node)</span> maintains your copy of Epic-Cash blockchain.
+            Must be running and up to date in order to mine solo or use with local wallet.
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal DB FIX-->
+<div class="modal fade" id="fix_db_modal" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Restoring chain data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-3">
+                This will backup your <code>chain_data</code> to <code>old_chain_data</code> directory,
+                and restore from selected source or previously created backup.
+                <p class="text-muted my-3"><small><span id="db_fix_help"></span></small></p>
+            </div>
+            <div class="modal-footer mt-3">
+                <button type="button" id="upload_dir_btn" class="btn btn-info mx-2" onclick="uploadChainData()">
+                    Upload new chain_data
+                </button>
+
+                <button type="button" id="exit_btn" class="btn btn-success hidden mx-2" data-bs-dismiss='modal'>
+                    Confirm
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal PEERS FIX-->
+<div class="modal fade" id="fix_peers" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Clearing peers data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-3 mt-3">
+                This should be used in case of synchronization problems like small number of peers.
+                Server will be stopped and <code>chain_data/peer</code> directory cleared.
+            </div>
+            <div class="modal-footer mt-3">
+                <button type="button" class="btn btn-success" onclick="removePeers()"
+                    data-bs-dismiss="modal">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,134 @@
+<!--RIGHT WALLET OPTIONS OFFCANVAS-->
+<div class="offcanvas offcanvas-end" id="offcanvasWalletOptions"
+     aria-labelledby="offcanvasWalletOptionsLabel">
+    <div class="card mt-2">
+        <div class="offcanvas-header top_wallet_card p-2">
+            <h5 class="offcanvas-title" id="offcanvasWalletOptionsLabel">
+                <a role="button" class="text-white ml-2"
+                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasWallet">
+                    <i class="fas fa-chevron-circle-left mr-2"> </i> Wallet \ Options
+                </a>
+            </h5>
+            <button type="button" class="btn-close text-light mr-1"
+                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasWallet">
+            </button>
+        </div>
+        <div class="offcanvas-body p-2 pt-0">
+            <!-- OPTIONS LISTENER PORT -->
+            <div class="row justify-content-center align-items-center mt-1 px-0">
+                <div class="col-auto">
+                    <div class="form-group bmd-form-group">
+                        Listener port
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group bmd-form-group mt-0">
+                        <input type="number" class="form-control text-center" value=""
+                               placeholder="" id="set_wallet_port_input">
+                    </div>
+                </div>
+                <div class="col-2 text-end">
+                    <div class="form-group bmd-form-group">
+                        <button role="button" id="save_wallet_port_btn" class="py-1 px-2 btn btn-success btn-sm">
+                            <span class="material-icons">save</span> save
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPTIONS WALLET IP -->
+            <div class="row justify-content-center align-items-center mt-1 px-0">
+                <div class="col-auto">
+                    <div class="form-group bmd-form-group">
+                        Receive outside transactions
+                    </div>
+                </div>
+                <div class="col-2 text-end">
+                    <div class="togglebutton wallet_ip_option mt-0 mb-2">
+                        <label>
+                            <input type="checkbox" checked>
+                            <span class="toggle"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPTIONS LOCAL NODE ONLY -->
+            <div class="row justify-content-center align-items-center mt-1 px-0">
+                <div class="col-auto">
+                    <div class="form-group bmd-form-group">
+                        Connect only to local node
+                    </div>
+                </div>
+                <div class="col-2 text-end">
+                    <div class="togglebutton use_local_node mt-0 mb-2">
+                        <label>
+                        <input type="checkbox">
+                        <span class="toggle"></span>
+                    </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row justify-content-center align-items-center mt-2">
+    <!--                <div class="col-7 text-end">-->
+    <!--                    Confirmation with password-->
+    <!--                </div>-->
+    <!--                <div class="col-2 mb-2">-->
+    <!--                    <div class="togglebutton align-center mr-1">-->
+    <!--                        <label class="align-center">-->
+    <!--                            <input type="checkbox" checked="">-->
+    <!--                            <span class="toggle"></span>-->
+    <!--                        </label>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+                <div class="col-9 my-1">
+                    <button class="btn btn-block btn-default btn-wallet" onclick="showSeedPhrase()" >
+                        <span class="material-icons align-middle mr-2">visibility</span>
+                        Show Seed Phrase
+                    </button>
+                </div>
+                <div class="col-9 my-1">
+                    <button class="btn btn-block btn-default btn-wallet" onclick="runWalletTerminal()">
+                        <i class="fas fa-terminal align-middle ml-1 mr-2"></i>
+                        Run Wallet Terminal
+                    </button>
+                </div>
+                <div class="col-9 my-1">
+                    <button class="btn btn-block btn-default btn-wallet" onclick="backupWalletData()" >
+                        <span class="material-icons align-middle mx-2">cloud_upload</span>
+                        Backup Wallet Data <span class="mx-2" id="wallet_options_backup_btn_spinner"></span>
+                    </button>
+                </div>
+                <div class="col-9 my-1">
+                    <button class="btn btn-block btn-default btn-wallet" onclick="openTOML(file='wallet')" >
+                        <span class="material-icons align-middle mr-2">description</span>
+                        Open Config TOML File
+                    </button>
+                </div>
+                <div class="col-9 my-1">
+                    <button class="btn btn-block btn-default btn-wallet" onclick="openLogFile(file='wallet')" >
+                        <span class="material-icons align-middle mr-2">summarize</span>
+                        Open Log File
+                    </button>
+                </div>
+                <div class="col-9 my-1">
+                    <button class="btn btn-block btn-default btn-wallet" onclick="walletCheck()">
+                        <i class="fas fa-wrench mr-2"></i> Check / Fix
+                    </button>
+                </div>
+                <div class="col-9 my-1">
+                    <button class="btn btn-block btn-default btn-wallet" onclick="importFromFiles()">
+                        <i class="fas fa-file-import mx-2"></i>
+                        Import Wallet <span class="mx-2" id="wallet_options_import_btn_spinner"></span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

@@ -1,122 +1,163 @@
-<div class="card card-stats soft-cards">
-    <div class="card-header card-header-info card-header-icon mb-1">
-        <div class="card-icon">
-            <i class="material-icons">account_balance_wallet</i>
-        </div>
 
-        <div class="top_wallet_card my-2">
-            <p class="card-category">Wallet balance as of height:
-                <span id="wallet_height"></span>
-                <a href="#" onclick="walletBalance()" class="text-dark">
-                    <i id="wallet_refresh_btn" style="font-size: 16px; width: 16px"
-                       class="fa fa-refresh mx-2"></i>
-                </a>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#wallet_settings_modal" class="text-dark">
-                    <i style="font-size: 16px; width: 16px" class="fas fa-cog"></i>
-                </a>
-            </p>
-        </div>
+<!--LEFT MAIN WALLET OFFCANVAS-->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasWallet"
+     aria-labelledby="offcanvasWalletLabel" data-bs-backdrop="true">
+        <div class="row justify-content-center align-items-center mt-2">
+            <div class="card card-wallet">
 
-        <div class="row" id="balances_response">
-            <div class="col-12 mt-2">
-                <span class="h2 text-dark">
-                    <img class="img mb-1" src="/static/epiccoin_45px.png" />
-                    <span id="total">0.0000</span>
-                </span>
-                <br />
-                <span class="fs-5 text-dark">
-                    <small id="usd_value">0.00 USD</small>
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <div class="card-footer mt-4">
-        <button class="btn btn-sm btn-success w-100"
-                data-bs-toggle="modal" data-bs-target="#wallet_modal">
-            <i class="fas fa-share"></i> Withdraw
-        </button>
-    </div>
-</div>
-
-
-<!-- Modal WALLET -->
-<div class="modal fade" id="wallet_modal" data-bs-backdrop="static" data-bs-keyboard="false"
-     tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Withdraw Mined Epic-Cash</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body py-3 mt-3">
-                <p class="mt-3 mb-4 py-2 bg-info w-100 text-center" id="wallet_help"></p>
-                <p>
-                    You can withdraw mined Epic-Cash to your local wallet or send outside, i.e. exchange or other users.
-                </p>
-                <p>
-                    Address must be a valid HTTP/S address pointing to open and working listener, examples:
-                </p>
-
-                <p class="text-center">
-                    <code>https://epicradar.tech/wallet</code><br />
-                    <code>https://192.168.0.1:3415</code><br />
-                </p>
-
-                <div class="form-group bmd-form-group">
-                    <label for="address"> HTTP/ HTTPS listener address</label>
-                    <input type="text" class="form-control" id="address">
-                </div>
-                <button class="btn btn-success w-100" onclick="withdrawFromWallet()"
-                        id="wallet_withdraw_btn">
-                    Confirm
-                </button>
-            </div>
-            <div class="modal-footer mt-3">
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal WALLET SETTINGS -->
-<div class="modal fade" id="wallet_settings_modal" data-bs-backdrop="static" data-bs-keyboard="false"
-     tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Epic-Cash Wallet Settings</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body py-3 mt-3">
-                <h4 class="text-dark mt-2">
-                    Wallet balance details
-                </h4>
-                <hr class="my-1"/>
-                <div class="row text-dark">
-                    <div class="col-6">
-                        Waiting Confirmation
-                    </div>
-                    <div class="col-6">
-                        <span id="wait_conf"></span>
+                <!-- WALLET TOP STATUS -->
+                <div class="row top_wallet_card">
+                    <div class="col-8 text-start text-white mt-1 drag-handle">
+                        <i class="fas fa-wallet ml-1"></i>
+                        <span class="align-middle ml-2"> EPIC WALLET </span>
                     </div>
 
-                    <div class="col-6">
-                        Locked:
-                    </div>
-                    <div class="col-6">
-                        <span id="locked"></span>
-                    </div>
-
-                    <div class="col-6">
-                        Spendable
-                    </div>
-                    <div class="col-6">
-                        <span id="spendable"></span>
+                    <div class="col-4 text-end text-white mt-1">
+                        <a href="#" onclick="walletDetailedBalance()" class="text-white">
+                            <i style="font-size: 16px; width: 16px" class="fas fa-search-dollar"></i>
+                        </a>
+                        <a href="#" onclick="walletBalance()" class="text-white mx-3">
+                            <i style="font-size: 16px; width: 16px" class="fa fa-refresh wallet_refresh_btn"></i>
+                        </a>
+                        <button type="button" class="btn-close btn-close-white mr-2"
+                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasWallet">
+                        </button>
                     </div>
                 </div>
+
+                <div class="row d-flex justify-content-center align-items-center my-2 px-3">
+                    <div class="col-4 text-start">
+                        <img class="img mb-1" src="/static/epiccoin_100px.png" />
+                    </div>
+                    <div class="col-auto">
+                        <div class="row justify-content-start align-content-center mb-2">
+                            <div class="col-12 text-end text-muted">
+                                <div class="d-inline text-end" data-bs-toggle='tooltip' data-bs-placement='top'
+                                     title='Coins waiting for confirmation' style="font-size: 0.8rem;">
+                                    <span class="material-icons align-middle" style="font-size: 0.8rem;">hourglass_empty</span>:
+                                    <small class="wallet_wait_conf">0.0000</small>
+                                </div>
+                                <div class="d-inline" data-bs-toggle='tooltip' data-bs-placement='top'
+                                      title='Coins locked by previous transaction' style="font-size: 0.8rem;">
+                                    <span class="material-icons align-middle" style="font-size: 0.8rem;">lock</span>:
+                                    <small class="wallet_locked">0.0000</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="fs-1 text-dark wallet_spendable">0.0000</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 fs-5 text-dark text-end">
+                                <small class="wallet_usd_value">~0.00 USD</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="text-muted mx-2 py-0 my-0" />
+
+                <!-- PENDING TX ROW -->
+                <div id="wallet_pending_file_tx" hidden
+                     class="row justify-content-center align-content-center my-2">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-default btn-sm" id="wallet_pending_file_tx_btn"
+                                style="background-image: var(--walletSecondary)!important;"
+                                onclick="showSendWalletTab()"
+                                data-bs-toggle="popover" data-bs-placement="top"
+                                title="">
+                            <span class="material-icons fs-4">schedule</span> Finalize pending
+                            <span class="material-icons align-middle ml-2">description</span>
+                            <span id="wallet_pending_file_tx_address"> </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- WALLET BODY -->
+                <div class="row justify-content-center align-content-center"
+                     style="margin: 0px!important" id="walletBody">
+                    <div class="col-12 text-center wallet-body mb-3">
+                        <div class="col-12">
+                            <div class="card mb-2">
+                                <div class="card-header card-header-tabs card-header-rose"
+                                     style="background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);">
+                                    <div class="nav-tabs-navigation">
+                                        <div class="nav-tabs-wrapper px-1 mx-1">
+                                            <ul class="nav nav-tabs wallet_tabs justify-content-between" data-tabs="tabs">
+                                                <li class="nav-item px-1" onclick="changeTab(tab_='send_amount_screen')">
+                                                    <a class=" px-3 nav-link link-wallet send-tab" href="#wallet_send_tab" data-toggle="tab">
+                                                        <i class="material-icons text-danger">call_made</i> <br />SEND
+                                                        <div class="ripple-container"></div>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link link-wallet px-1 " href="#wallet_receive_tab" data-toggle="tab">
+                                                        <i class="material-icons text-success">call_received</i> <br />RECEIVE
+                                                        <div class="ripple-container"></div>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link link-wallet px-1 " href="#wallet_history_tab" data-toggle="tab">
+                                                        <i class="material-icons">receipt_long</i> <br />HISTORY
+                                                        <div class="ripple-container"></div>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link px-1 " data-bs-toggle="offcanvas" href="#offcanvasWalletOptions"
+                                                       role="button" aria-controls="offcanvasWalletOptions">
+                                                        <i class="material-icons">build</i> <br />OPTIONS
+                                                        <div class="ripple-container"></div>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item hidden">
+                                                    <a class="nav-link px-1 " href="#wallet_empty_tab" data-toggle="tab">
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="text-white" id="hide-wallet-tabs"
+                                                       onclick="hideWalletTabs()">
+                                                        <span class="material-icons align-center mt-2">keyboard_double_arrow_up</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- WALLET TABS BODY-->
+                                <div class="card-body pb-2">
+                                    <div id="accordion">
+                                        <div class="tab-content">
+                                            <div class="tab-pane tab-wallet" id="wallet_send_tab">
+                                                {% include 'wallet_send.html' %}
+                                            </div>
+                                            <div class="tab-pane tab-wallet" id="wallet_receive_tab">
+                                                {% include 'wallet_receive.html' %}
+                                            </div>
+                                            <div class="tab-pane tab-wallet" id="wallet_history_tab">
+                                                {% include 'wallet_history.html' %}
+                                            </div>
+                                            <div class="tab-pane tab-wallet" id="wallet_empty_tab"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+<!--</div>-->
+
+
+<!--WALLET OPTIONS OFFCANVAS-->
+{% include 'wallet_options.html' %}
+
+
+
+
+
 

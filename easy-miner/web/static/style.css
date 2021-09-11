@@ -1,98 +1,175 @@
+.ui-draggable-handle {cursor: grab;}
+:root {
+    --walletColor: linear-gradient(60deg, #29323c 0%, #485563 100%);
+    --walletSecondary: linear-gradient(315deg, #5b6467 0%, #8b939a 74%);
+    /* var(--walletColor); */
+}
+
+
 body, html {
     font-family: 'Roboto', sans-serif!important;
-    background-repeat: no-repeat;
     color: #FAFFF7;
+    height: 100%;
 }
 
-
-.footer {
-    z-index: 5;
+.app-container {
+    background-image: url('/static/light_stars_bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
 }
-
 .app_head {
     background-image: url('/static/bg2.png');
     color: #FAFFF7;
     box-shadow: 0px 2px 3px black;
 }
-
-.top_wallet_card {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 20px;
+.app-navbar {
+    text-align: center;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    padding-top: 5px;
+    box-shadow: 0px 1px 4px #333333;
+    background-color: rgba(250, 255, 247, 0.8);
+}
+.soft-cards {
+    border: none!important;
+    box-shadow: none!important;
+    padding-bottom: 0px!important;
+    margin-bottom: 0px!important;
+}
+.top_soft_card {
+    height: 60px;
 }
 
-.software_tabs {
-    color: #FAFFF7;
-    text-align: center;
-    margin-bottom: 45px;
-    box-shadow: 0px 1px 4px #333333;
-    background-color: rgba(0,0,0,0.05)
+#offcanvasWallet {
+    width: 450px;
+    background: none!important;
+    border: none!important;
+    overflow-y: auto!important;
+    overflow-x: hidden!important;
+}
+
+body.swal2-shown > [aria-hidden="true"] {
+  transition: 0.1s filter;
+  filter: blur(1px);
+}
+
+.swal2-modal{
+  position: absolute !important;
+  z-index: 99999!important;
+}
+
+#offcanvasWalletOptions {
+    background: none!important;
+    border: none!important;
+    overflow-y: auto!important;
+    overflow-x: hidden!important;
+}
+
+.card-wallet {
+    padding-right: 0px!important;
+    padding-left: 0px!important;
+    margin: 0px!important;
+    background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)!important;
+    shadow-box: none!important;
+    position: relative;
+    border-radius: 8px!important;
+}
+.top_wallet_card {
+    background-image: var(--walletColor);
+    width: 100%;
+    height: 34px;
+    margin: 0px!important;
+}
+.wallet-body {
+    padding-right: 10px!important;
+    padding-left: 10px!important;
+    margin-bottom: 0px;important!;
+}
+.http_help:hover {
+    color: #000;
 }
 
 button, .btn {
   font-family: Tahoma;
     font-size: 0.9rem!important;
+    text-shadow: none
 }
 
 .a-link, a-link:hover {
-    color: white!important;
+    color: #2C2C2C!important;
+    text-decoration: none!important;
 }
-
+.a-link:hover {
+    text-decoration: underline!important;
+}
 .top-cards {
     background-color: rgba(16,17,20, 0.75)!important;
     font-color: #EAEFE7;
     margin-bottom: 10px !important;
     padding-bottom: 5px !important;
 }
-
-.soft-cards {
-    min-height: 220px;
-}
-
 .footer {
     background-image: url('/static/bg2.png');
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
+    height: 50px;
     text-align: center;
     box-shadow: 0px 2px 12px black;
+    border-bottom-radius: 8px!important;
 }
-
+.foo-link:hover {
+    color:#fff!important;
+    text-decoration: underline!important;
+}
 .hidden {
     display: none!important;
 }
 
-.console {
-  font: 1.2rem Inconsolata, monospace;
+/* custom scrollbar */
+::-webkit-scrollbar {width: 17px;}
+::-webkit-scrollbar-track {background-color: transparent;}
+::-webkit-scrollbar-thumb {
+  background-color: #5C5C5C;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
 }
-.console.pre {
-  font: 1.2rem Inconsolata, monospace;
+::-webkit-scrollbar-thumb:hover {background-color: #333333;}
+
+.console {
+    color: #1E1E1E;
+    font: 1.2rem Inconsolata, monospace;
 }
 
 .indicator.online {
     background: #28B62C;
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    text-align: top;
+    width: 0.8em;
+    height: 0.8em;
     border-radius: 50%;
     -webkit-animation: pulse-animation 2s infinite linear;
 }
 
 .indicator {
-    background: #B2B7AF;
+    background: #E6E6E6;
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    text-align: top;
+    width: 0.8em;
+    height: 0.8em;
+
     border-radius: 50%;
 }
 
 .indicator.sync {
     background: #CBB128;
+    text-align: top;
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    width: 0.8em;
+    height: 0.8em;
 }
 
 @-webkit-keyframes pulse-animation {
@@ -106,6 +183,149 @@ button, .btn {
 .indicator.error {
     background: #FF4136;
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    width: 0.8em;
+    height: 0.8em;
 }
+.nobg {
+    background-color:none!important;
+    border:none!important
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* METHOD RADIO BUTTONS */
+.method-radio{
+  display: inline-flex;
+  width: 400px;
+  align-items: center;
+  justify-content: space-evenly;
+  border-radius: 5px;
+}
+ .option{
+  height: 40px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 0;
+  border: 2px solid lightgrey;
+  transition: all 0.3s ease;
+}
+ .option .dot{
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  position: relative;
+}
+ .option .dot::before{
+  position: absolute;
+  content: "";
+  top: 4px;
+  left: 4px;
+  width: 16px;
+  height:16px;
+  background-color: #000;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(1.5);
+  transition: all 0.3s ease;
+}
+input[type="radio"]{
+  display: none;
+}
+#option-1:checked:checked ~ .option-1,
+#option-2:checked:checked ~ .option-2{
+  background-image: var(--walletColor);
+  background-image: var(--walletColor);
+#option-1:checked:checked ~ .option-1 .dot,
+method-radio
+}
+#option-1:checked:checked ~ .option-1 .dot::before,
+#option-2:checked:checked ~ .option-2 .dot::before{
+  opacity: 1;
+  transform: scale(1);
+}
+.option span{
+  font-size: 0.8rem;
+  color: #2A2A2A;
+}
+#option-1:checked:checked ~ .option-1 span,
+#option-2:checked:checked ~ .option-2 span{
+  color: #fff;
+}
+
+input[type="number"]::-webkit-input-placeholder {
+  font-size: 1.6rem;
+}
+
+.btn-wallet {background-image: var(--walletColor)!important;}
+
+
+
+/* AMOUNT INPUT */
+input[type="number"] {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.number-input {
+  border: 1px solid #1D2730;
+  display: inline-flex;
+  border-radius: 6px;
+}
+
+.number-input button {
+  outline:none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+}
+
+.number-input button:after {
+  display: inline-block;
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: '\f077';
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+.number-input button.plus:after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.number-input input[type=number] {
+    width: 15rem;
+  padding: .5rem;
+  margin-top: 4px;
+  border: none!important;
+  font-size: 1.4rem;
+  height: 2.2rem;
+  text-align: center;
+}
+
